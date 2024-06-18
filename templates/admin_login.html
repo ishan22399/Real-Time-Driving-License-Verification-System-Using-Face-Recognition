@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!----======== CSS ======== -->
+    <link rel="stylesheet" href="../static/sty.css">
+    <link rel="stylesheet" href="../static/analytics_style.css">
+    
+     
+    <!----===== Iconscout CSS ===== -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <title>Admin Dashboard Panel</title>
+</head>
+<body>
+    <nav>
+        <div class="logo-name">
+            <div class="logo-image">
+               <img  alt="">
+            </div>
+
+            <span class="logo_name">Verification System</span>
+        </div>
+
+        <div class="menu-items">
+            <ul class="nav-links">
+                <li><a href="#">
+                    <i class="uil uil-estate"></i>
+                    <span class="link-name">Home</span>
+                </a></li>
+                <li><a href="/verification">
+                    <i class="uil uil-camera"></i>
+                    <span class="link-name">Verification</span>
+                </a></li>
+                <li><a href="{{ url_for('license') }}">
+                    <i class="uil uil-book"></i>
+                    <span class="link-name">License Form</span>
+                </a></li>
+               <!----- <li><a href="#">
+                    <i class="fa fa-check-circle"></i>
+                    <span class="link-name">Verified Licenses </span>
+                </a></li>
+                <li><a href="#">
+                    <i class="fa fa-times-circle"></i>
+                    <span class="link-name">Unverified Licenses</span>
+                </a></li>--->
+                <li><a href="#">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span class="link-name">Update License Details</span>
+                </a></li>
+            </ul>
+            
+            <ul class="logout-mode">
+                <li><a href="#">
+                    <i class="uil uil-signout"></i>
+                    <span class="link-name">Logout</span>
+                </a></li>
+
+                <li class="mode">
+                    <a href="#">
+                        <i class="uil uil-moon"></i>
+                    <span class="link-name">Dark Mode</span>
+                </a>
+
+                <div class="mode-toggle">
+                  <span class="switch"></span>
+                </div>
+            </li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="dashboard">
+        <div class="top">
+            <i class="uil uil-bars sidebar-toggle"></i>
+
+            <div class="search-box">
+                <i class="uil uil-search"></i>
+                <input type="text" placeholder="Search here...">
+            </div>
+            
+            <!--<img src="images/.jpg" alt="">-->
+        </div>
+      
+        <div class="dash-content">
+            <div class="overview">
+                <div class="title">
+                    <i class="uil uil-tachometer-fast-alt"></i>
+                    <span class="text">Dashboard</span>
+                </div>
+    
+                <div class="boxes">
+                    <div class="box box1">
+                        <i class="fa fa-check-circle"></i>
+                        <span class="text">Total Verified</span>
+                        <span class="number">0</span>
+                    </div>
+                    <div class="box box2">
+                        <i class="fa fa-times-circle"></i>
+                        <span class="text">Total Unverified</span>
+                        <span class="number">0</span>
+                    </div>
+                    <div class="box box3">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        <span class="text">Total Penalty</span>
+                        <span class="number">0</span>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="activity">
+                <div class="title">
+                    <i class="uil uil-clock-three"></i>
+                    <span class="text">Recent Verifications</span>
+                    <span>
+                    
+                </div>
+        
+
+                  
+    </section>
+
+    
+    
+    
+    <script src="{{ url_for('static', filename='server.js') }}"></script>
+    <script src="{{ url_for('static', filename='scr.js') }}"></script>
+    <script src="../static/scr.js"></script>
+    
+</body>
+</html>

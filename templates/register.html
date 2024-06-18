@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='animate.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='circle.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet' type='text/css'>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='wow.min.js') }}"></script>
+    <style>
+        /* Common styles for responsiveness and attractiveness */
+        body {
+            background: linear-gradient(90deg, #aebba7 0%, #a8ad91 50%);
+            font-family: "Roboto", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .heading {
+            font-size: 42px;
+            color: #333;
+            margin-bottom: 40px;
+            text-align: center;
+            margin-top: -1px;
+            font-weight: bold;
+            
+        }
+        .signup-container {
+            width: 100%;
+            padding: 50px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            
+        }
+        .form {
+            background: #fff;
+            max-width: 400px;
+            width: 100%;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        .form input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .form button {
+            width: 100%;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .form button:hover {
+            background-color: #43A047;
+        }
+        .form .message {
+            margin: 20px 0 0;
+            font-size: 14px;
+            text-align: center;
+        }
+        .form .message a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .navbar-default {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-default" id="navbar">
+            <div class="container">
+                <div class="navbar-header">
+                    <!-- Toggle button for collapsed navigation -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <!-- Brand/logo -->
+                    <a class="navbar-brand" href="#" style="font-family:Georgia, 'Times New Roman', Times, serif; font-size: 28px; color: #1b1717; margin-left: 15px;">Driving License Authentication</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <!-- Navigation links -->
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">ABOUT US</a></li>
+                        <li><a href="#">SERVICES</a></li>
+                        <li><a href="{{ url_for('admin_page') }}">ADMIN LOGIN</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    <div class="signup-container" id="signup-container">
+        <div class="form">
+            <h1 class="heading">Register</h1>
+            <form method="POST" action="{{ url_for('register') }}">
+                <input type="text" name="name" placeholder="Name" required>
+                <input type="number" name="fa-phone" placeholder="Phone Number" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" id="password" placeholder="Password" required>
+                <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required>
+                <button id="register-btn">Register</button>
+                <div class="message">You have an account. <a href="{{ url_for('login') }}" id="signin-link" class="text-white-50 fw-bold">Sign In</a></div>
+            </form>
+        </div>
+    </div>
+    
+<script>
+    window.onscroll = function() {myFunction()};
+    var navbar = document.getElementById("navbar");
+    var sticky = navbar.offsetTop;
+    function myFunction() {
+        if (window.pageYOffset >= sticky) {
+            navbar.classList.add("sticky")
+        } else {
+            navbar.classList.remove("sticky")
+        }
+    }
+</script>
+
+<!-- <script>
+    const password = document.getElementById('password');
+        const confirm_password = document.getElementById('confirm_password');
+
+        function validatePassword() {
+            if (password.value !== confirm_password.value) {
+                confirm_password.style.borderColor = 'red';
+            } else {
+                confirm_password.style.borderColor = 'green';
+            }
+        }
+
+        password.addEventListener('input', validatePassword);
+        confirm_password.addEventListener('input', validatePassword);
+</script> -->
+
+
+
+</body>
+</html>

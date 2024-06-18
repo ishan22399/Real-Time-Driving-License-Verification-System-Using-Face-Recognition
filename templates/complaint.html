@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add Bootstrap CSS for icons and fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-FJj2A7zCyJ8iRkf5Oj5P8F5f5Py4Ck5FO5Kg5f5F5kl5Ck5F5i5F5i5F5j5E5I5F5k5F5P5n5U5K5O5k5p5f5k5F5U5K5O5K5v5E5N5K5U5n5O5I5O5K5I5P5k5P5g5f5k5I5Y5w5B5E5y5d5E5L5E5I5I5f5L5E5I5P5l5M5D5k5k5F5E5V5P5k5D5J5b5T5H5e5E5E5y5X5E5y5V5N5A5K5Y5M5O5G5T5b5P5b5P5b5b5B5p5H5b5g5C5C5C5F5B5X5D5T5X5E5E5J5F5y5Y5j5h5S5S5N5D5n5B5S5M5d5n5B5z5d5D5L5h5J5N5d5B5t5H5E5E5E5k5e5B5G5T5D5z5M5h5N5h5P5f5F5y5H5y5M5M5z5T5H5E5z5B5A5L5L5D5n5P5R5T5Z5w5C5O5M5D5N5D5l5G5G5G5i5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A=" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+    <title>Vehicle Stolen Complaint</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Vehicle Stolen Complaint Registration</h1>
+        <form id="complaint-form">
+            <div class="form-group">
+                <label for="vehicle_make">Vehicle Make:</label>
+                <input type="text" id="vehicle_make" name="vehicle_make" required>
+            </div>
+            <div class="form-group">
+                <label for="vehicle_model">Vehicle Model:</label>
+                <input type="text" id="vehicle_model" name="vehicle_model" required>
+            </div>
+            <div class="form-group">
+                <label for="license_plate">License Plate Number:</label>
+                <input type="text" id="license_plate" name="license_plate" required>
+            </div>
+            <div class="form-group">
+                <label for="complaint">Complaint Details:</label>
+                <textarea id="complaint" name="complaint" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit <i class="bi bi-check"></i></button>
+        </form>
+        <div id="confirmation" class="hidden">
+            <p>Your vehicle stolen complaint has been registered. Thank you!</p>
+        </div>
+        <!-- Dark/Light Mode Toggle Button -->
+        <button id="dark-mode-toggle" class="btn btn-secondary">Toggle Dark Mode <i class="bi bi-moon"></i></button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-pzjw8f+ua6Kw1TIq0v8FqFjcJ6pajs/rfdfs3SO+k9w5w5F5K5F5I5F5I5j5E5I5F5k5F5P5n5U5K5O5k5p5f5k5F5U5K5O5K5v5E5N5K5U5n5O5I5O5K5I5P5k5P5g5f5k5I5Y5w5B5E5y5d5E5L5E5I5I5f5L5E5I5P5l5M5D5k5k5F5E5V5P5k5D5J5b5T5H5e5E5E5y5X5E5y5V5N5A5K5Y5M5O5G5T5b5P5b5P5b5b5B5p5H5b5g5C5C5C5F5B5X5D5T5X5E5E5J5F5y5Y5j5h5S5S5N5D5n5B5S5M5d5n5B5z5d5D5L5h5J5N5d5B5t5H5E5E5E5k5e5B5G5T5D5z5M5h5N5h5P5f5F5y5H5y5M5M5z5T5H5E5z5B5A5L5L5D5n5P5R5T5Z5w5C5O5M5D5N5D5l5G5G5G5i5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A=" crossorigin="anonymous"></script>
+    <script src="complaint.js"></script>
+</body>
+</html>

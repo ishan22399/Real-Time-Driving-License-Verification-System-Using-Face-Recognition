@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver's License Information Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <style>
+        /* Global styles for the body */
+/* Global styles for the body */
+/* Set the background image for the entire page */
+.background-image {
+     /* Replace 'your-image.jpg' with the path to your image */
+    background-size: cover; /* Cover the entire viewport */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat; /* Prevent repeating the background image */
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Navbar styles */
+.navbar {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    text-align: right;
+}
+
+.navbar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    display: inline;
+    margin-left: 20px;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Header styles */
+header {
+    text-align: left;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    padding: 25px;
+    border-bottom: 1px solid #a9a7a7;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+h1 {
+    font-size: 44px;
+    margin: 0;
+}
+
+/* Additional styles for checkboxes */
+.checkbox-table {
+    font-family: Arial, sans-serif;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 500px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    vertical-align: top;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.5);
+    margin-right: 10px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    margin-top: 20px;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+/* Additional styles for checkboxes */
+input[type="checkbox"]:checked + label {
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* Hover effect for checkboxes and cells */
+td:hover {
+    background-color: #f7f7f7;
+}
+
+/* Style the table header */
+th {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+}
+
+#button {
+    position: relative;
+    
+}
+
+
+
+.cov-label {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.cov-select {
+  width: 100%;
+  height: 200px;
+  margin-bottom: 20px;
+}
+
+.cov-select option {
+  font-size: 1rem;
+  padding: 5px 10px;
+}
+
+
+
+
+    </style>
+</head>
+<body>
+
+   
+    <div class="container">
+        <header>
+            <h1>Driver's License Information Form</h1>
+        </header>
+        
+        
+        <br>
+        <form action="/submit" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder=" e.g. ISHAN SHIVANKAR" required maxlength="30" oninput="convertToUpperCase(this)" onkeydown="blockLeadingWhitespace(event)">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Gender</label>
+                    
+                        <select class="form-control" id="gender" name="gender" required>
+                            <option value="" selected disabled>Choose Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" class="form-control" id="dob" name="dob"  required>
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <input type="text" class="form-control" id="country" name="country"  value="INDIA" readonly>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="state">State or Union Territories </label>
+                        <select class="form-control" id="state" name="state" required>
+                            <option value="" selected disabled>Select State</option>
+                            <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                            <option value="Assam">Assam</option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chandigarh">Chandigarh</option>
+                            <option value="Chhattisgarh">Chhattisgarh</option>
+                            <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Ladakh">Ladakh</option>
+                            <option value="Lakshadweep">Lakshadweep</option>
+                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Manipur">Manipur</option>
+                            <option value="Meghalaya">Meghalaya</option>
+                            <option value="Mizoram">Mizoram</option>
+                            <option value="Nagaland">Nagaland</option>
+                            <option value="Odisha">Odisha</option>
+                            <option value="Puducherry">Puducherry</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Sikkim">Sikkim</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Tripura">Tripura</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West Bengal">West Bengal</option>   
+                        </select>
+                    </div>
+                    
+                        
+                      
+                      
+                    <div class="form-group">
+                      <label for="city">City</label>
+                      <select class="form-control" id="city" name="city" required>
+                          <option value="" selected disabled>Select City</option>
+                      </select>
+                  </div>
+                  
+                      
+                      <div class="form-group">
+                        <label for="address_line">Address Line</label>
+                        <input type="text" class="form-control" id="address_line" name="address_line" required maxlength="30" oninput="convertToUpperCase(this)" onkeydown="blockLeadingWhitespace(event)">
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="landmark">Landmark</label>
+                        <input type="text" class="form-control" id="landmark" name="landmark" required maxlength="30" oninput="convertToUpperCase(this)" onkeydown="blockLeadingWhitespace(event)">
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="pincode">Pincode</label>
+                        <input type="text" class="form-control" id="pincode" name="pincode" required maxlength="6" onkeydown="return event.key !== ' ' && event.key !== 'Spacebar' && event.key !== 'Space' && event.key !== ' '">
+                      </div>
+                      
+                    <div class="form-group">
+                        <label for="dl_number">Driving License Number</label>
+                        <input type="text" class="form-control" id="dl_number" name="dl_number"  required maxlength="11" pattern="[A-Z0-9]+" oninput="convertToUpperCase(this)" onkeydown="return event.key !== ' ' && event.key !== 'Spacebar' && event.key !== 'Space' && event.key !== ' '">
+                    </div>
+                    <div class="form-group">
+                        <label for="doi">Date of Issue</label>
+                        <input type="date" class="form-control" id="doi" name="doi" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="issuing_authority">Issuing Authority</label>
+                        <input type="text" class="form-control" id="issuing_authority" name="issuing_authority" placeholder=" e.g. MH12" required oninput="convertToUpperCase(this)" onkeydown="return event.key !== ' ' && event.key !== 'Spacebar' && event.key !== 'Space' && event.key !== ' '" maxlength="5" >
+                    </div>
+
+                
+                </div>
+                <br>
+
+                
+               
+                    <div class="form-group">
+
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="vt">Valid Till</label>
+                                <input type="date" class="form-control" id="vt" name="vt" required>
+                            </div>
+        
+                            <div class="form-group">
+                                <label for="image">License Holder Image</label>
+                                <input type="file" class="form-control" id="image" name="image" required>
+                            </div>
+                            <br>
+
+                            <div class="cov-container">
+                              <label for="cov" class="cov-label" id="cov"><b>Authorisation to Drive Following Class of Vehicles Throughout India (COV)</b></label>
+                          <select name="cov[]" id="cov[]" multiple size="10">
+                          <option value="MCWG">(MCWG) Motorcycle without Gear</option>
+                          <option value="LMV">(LMV) Light Motor Vehicle</option>
+                          <option value="MCG">(MCG) Motorcycle with Gear</option>
+                          <option value="MGV">(MGV) Medium Goods Vehicle</option>
+                          <option value="HGV">(HGV) Heavy Goods Vehicle</option>
+                          <option value="HPMV">(HPMV) Heavy Passenger Motor Vehicle</option>
+                          <option value="RR">(RR) Road Roller</option>
+                          <option value="MG">(MG) Motor Grader</option>
+                          <option value="NTV">(NTV) Non-Transport Vehicle</option>
+                          <option value="Tractor">(Tractor) Tractor</option>
+                          <option value="TT">(TT) Tractor with Trailer</option>
+                          <option value="IC">(IC) Invalid Carriage</option>
+                          <option value="LMV-NT">(LMV-NT) Light Motor Vehicle (Non-Transport)</option>
+                          <option value="LMV-C">(LMV-C) Light Motor Vehicle (Commercial)</option>
+                          <option value="MPV">(MPV) Medium Passenger Vehicle</option>
+                          <option value="HPV-C">(HPV-C) Heavy Passenger Vehicle (Commercial)</option>
+                          <option value="HGV-C">(HGV-C) Heavy Goods Vehicle (Commercial)</option>
+                          <option value="HPV-NT">(HPV-NT) Heavy Passenger Vehicle (Non-Transport)</option>
+                          <option value="HGV-NT">(HGV-NT) Heavy Goods Vehicle (Non-Transport)</option>
+                          <option value="CLMV">(CLMV) Conductor with Light Motor Vehicle</option>
+                          <option value="CMPV">(CMPV) Conductor with Medium Passenger Vehicle</option>
+                          <option value="CHPV">(CHPV) Conductor with Heavy Passenger Vehicle</option>
+                          <option value="CLMV-C">(CLMV-C) Conductor with Light Motor Vehicle (Commercial)</option>
+                          <option value="CMPV-C">(CMPV-C) Conductor with Medium Passenger Vehicle (Commercial)</option>
+                        </select>
+                        </div>
+
+                        
+                              
+                      </div>
+                      <br>
+                      
+                    <div class="form-group">
+                        <label for="license_image">Upload License Image</label>
+                        <input type="file" class="form-control" id="license_image" name="license_image">
+                    </div>
+                    <br>
+                    <div class="form-group" id="button">
+                      <button type="button" id="previewButton" class="btn btn-primary">Preview</button>
+                      <button type="submit" id="submitButton" class="btn btn-primary">Submit</button>
+                    </div>
+                    <br>
+
+                    <footer class="block">
+
+                        <p>&copy; 2023. All Rights Reserved.</p>
+
+                    </footer>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        var pincodeInput = document.getElementById('pincode');
+
+// Prevent the user from entering non-numeric characters
+pincodeInput.addEventListener('keypress', function(event) {
+  if (event.key.match(/[^0-9]/)) {
+    event.preventDefault();
+  }
+});
+
+// Prevent the user from submitting the form if the input field contains any non-numeric characters
+pincodeInput.addEventListener('blur', function() {
+  if (!/[0-9]+/.test(pincodeInput.value)) {
+    pincodeInput.setCustomValidity('Pincode must only contain numbers.');
+    pincodeInput.reportValidity();
+  }
+});
+
+function convertToUpperCase(input) {
+  input.value = input.value.toUpperCase();
+}
+
+function blockLeadingWhitespace(event) {
+    if (event.key === ' ' && event.target.selectionStart === 0) {
+        event.preventDefault();
+    }
+}
+
+
+
+    </script>
+
+</body>
+</html>
