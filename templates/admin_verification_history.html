@@ -1,0 +1,846 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Verification History - DL Verification System{% endblock %}
+
+{% block extra_head %}
+<style>
+    .admin-history-container {
+        padding: 2rem 0;
+        min-height: calc(100vh - 200px);
+    }
+
+    .admin-header {
+        background: linear-gradient(135deg, var(--dark-elevated) 0%, var(--dark-surface) 100%);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .admin-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--accent-gradient);
+        border-radius: 20px 20px 0 0;
+    }
+
+    .stats-overview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .overview-card {
+        background: var(--dark-elevated);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+
+    .overview-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-primary);
+        box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15);
+    }
+
+    .overview-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--text-primary) !important;
+        margin-bottom: 0.5rem;
+    }
+
+    .overview-label {
+        color: var(--text-secondary) !important;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .content-tabs {
+        display: flex;
+        background: var(--dark-surface);
+        border-radius: 12px;
+        padding: 0.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--border-color);
+    }
+
+    .tab-button {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: var(--text-secondary) !important;
+        padding: 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .tab-button.active {
+        background: var(--accent-primary);
+        color: white !important;
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .history-section {
+        background: var(--dark-elevated);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .advanced-filters {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: var(--dark-surface);
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .filter-label {
+        color: var(--text-primary) !important;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .filter-input, .filter-select {
+        background: var(--dark-elevated);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        color: var(--text-primary) !important;
+        padding: 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .filter-input:focus, .filter-select:focus {
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        outline: none;
+    }
+
+    .user-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .user-stat-card {
+        background: var(--dark-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .user-stat-card:hover {
+        border-color: var(--accent-primary);
+        background: var(--hover-bg);
+        transform: translateY(-2px);
+    }
+
+    .user-email {
+        color: var(--text-primary) !important;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+    }
+
+    .user-metrics {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .metric {
+        text-align: center;
+    }
+
+    .metric-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--accent-primary) !important;
+        display: block;
+    }
+
+    .metric-label {
+        color: var(--text-muted) !important;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .success-rate-bar {
+        width: 100%;
+        height: 8px;
+        background: var(--dark-card);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 1rem;
+    }
+
+    .success-rate-fill {
+        height: 100%;
+        background: var(--accent-gradient);
+        border-radius: 4px;
+        transition: width 0.6s ease;
+    }
+
+    .table-container {
+        background: var(--dark-surface);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        max-height: 600px;
+        overflow-y: auto;
+    }
+
+    .admin-table {
+        margin: 0;
+        color: var(--text-primary) !important;
+        font-size: 0.875rem;
+    }
+
+    .admin-table thead th {
+        background: var(--dark-elevated);
+        border-color: var(--border-color);
+        color: var(--text-primary) !important;
+        font-weight: 700;
+        padding: 1rem 0.75rem;
+        border-bottom: 2px solid var(--border-color);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .admin-table tbody td {
+        background: var(--dark-surface);
+        border-color: var(--border-color);
+        color: var(--text-secondary) !important;
+        padding: 0.75rem;
+        vertical-align: middle;
+    }
+
+    .admin-table tbody tr:hover td {
+        background: var(--hover-bg);
+        color: var(--text-primary) !important;
+    }
+
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--accent-gradient);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        margin-right: 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .quick-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .action-btn {
+        background: var(--dark-elevated);
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary) !important;
+        padding: 0.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.875rem;
+    }
+
+    .action-btn:hover {
+        border-color: var(--accent-primary);
+        color: var(--accent-primary) !important;
+        background: var(--hover-bg);
+    }
+
+    .pagination-controls {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .results-info {
+        color: var(--text-muted) !important;
+        font-size: 0.875rem;
+    }
+
+    /* Modal styles for user details */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: none;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+    }
+
+    .modal-content {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--dark-elevated);
+        border-radius: 20px;
+        padding: 2rem;
+        max-width: 800px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-xl);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .admin-history-container {
+            padding: 1rem 0;
+        }
+
+        .admin-header {
+            padding: 1.5rem;
+        }
+
+        .stats-overview {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .advanced-filters {
+            grid-template-columns: 1fr;
+        }
+
+        .user-stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-history-container">
+    <div class="container">
+        <!-- Header -->
+        <div class="admin-header">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="mb-3" style="color: var(--text-primary) !important; font-weight: 800;">
+                        <i class="fas fa-chart-line me-3"></i>
+                        Verification Analytics
+                    </h1>
+                    <p class="mb-0" style="color: var(--text-secondary) !important; font-size: 1.125rem;">
+                        Comprehensive verification history and user analytics dashboard
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <button class="btn-export" onclick="exportAllData()">
+                        <i class="fas fa-download"></i>
+                        Export All Data
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Overview -->
+        <div class="stats-overview">
+            <div class="overview-card">
+                <div class="overview-number">{{ total_verifications }}</div>
+                <div class="overview-label">Total Verifications</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-number">{{ today_verifications }}</div>
+                <div class="overview-label">Today</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-number">{{ week_verifications }}</div>
+                <div class="overview-label">This Week</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-number">{{ success_rate }}%</div>
+                <div class="overview-label">Success Rate</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-number">{{ successful_verifications }}</div>
+                <div class="overview-label">Successful</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-number">{{ failed_verifications }}</div>
+                <div class="overview-label">Failed</div>
+            </div>
+        </div>
+
+        <!-- Content Tabs -->
+        <div class="content-tabs">
+            <button class="tab-button active" onclick="switchTab('history')">
+                <i class="fas fa-history me-2"></i>All Verifications
+            </button>
+            <button class="tab-button" onclick="switchTab('users')">
+                <i class="fas fa-users me-2"></i>User Statistics
+            </button>
+        </div>
+
+        <!-- All Verifications Tab -->
+        <div id="history-tab" class="tab-content active">
+            <div class="history-section">
+                <h3 class="section-title" style="color: var(--text-primary) !important; margin-bottom: 1.5rem;">
+                    <i class="fas fa-list"></i>
+                    All Verification History
+                </h3>
+
+                <!-- Advanced Filters -->
+                <div class="advanced-filters">
+                    <div class="filter-group">
+                        <label class="filter-label">Search User</label>
+                        <input type="text" class="filter-input" id="userSearch" placeholder="Search by email...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Status</label>
+                        <select class="filter-select" id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="success">Success</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Date From</label>
+                        <input type="date" class="filter-input" id="dateFrom">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Date To</label>
+                        <input type="date" class="filter-input" id="dateTo">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">License Number</label>
+                        <input type="text" class="filter-input" id="licenseSearch" placeholder="Search license...">
+                    </div>
+                    <div class="filter-group" style="align-self: end;">
+                        <button class="filter-input" onclick="clearFilters()" style="background: var(--dark-card); cursor: pointer;">
+                            <i class="fas fa-times me-2"></i>Clear Filters
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    {% if verification_logs %}
+                    <table class="table admin-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Date & Time</th>
+                                <th>Status</th>
+                                <th>License</th>
+                                <th>Processing</th>
+                                <th>Score</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="verificationTableBody">
+                            {% for log in verification_logs %}
+                            <tr data-user="{{ log.user_email or '' }}" 
+                                data-status="{{ 'success' if log.success else 'failed' }}"
+                                data-date="{{ log.verification_time.strftime('%Y-%m-%d') if log.verification_time else '' }}"
+                                data-license="{{ log.license_verified or '' }}">
+                                <td>
+                                    <div style="display: flex; align-items: center;">
+                                        <div class="user-avatar">
+                                            {{ (log.user_email or 'U')[0].upper() }}
+                                        </div>
+                                        <div>
+                                            <div style="color: var(--text-primary) !important; font-weight: 600;">
+                                                {{ log.user_email or 'Unknown User' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>{{ log.verification_time.strftime('%d %b %Y') if log.verification_time else 'Unknown' }}</div>
+                                    <div style="color: var(--text-muted) !important; font-size: 0.75rem;">
+                                        {{ log.verification_time.strftime('%I:%M %p') if log.verification_time else '' }}
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if log.success %}
+                                    <span class="status-badge status-success">
+                                        <i class="fas fa-check"></i>Success
+                                    </span>
+                                    {% else %}
+                                    <span class="status-badge status-failed">
+                                        <i class="fas fa-times"></i>Failed
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if log.license_verified %}
+                                    <div class="license-info">{{ log.license_verified }}</div>
+                                    {% else %}
+                                    <span style="color: var(--text-muted) !important;">Not Found</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if log.processing_time %}
+                                    <span class="processing-time">{{ "%.2f"|format(log.processing_time) }}s</span>
+                                    {% else %}
+                                    <span style="color: var(--text-muted) !important;">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if log.match_score %}
+                                    <span style="color: var(--text-warning) !important;">{{ "%.3f"|format(log.match_score) }}</span>
+                                    {% else %}
+                                    <span style="color: var(--text-muted) !important;">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="quick-actions">
+                                        <button class="action-btn" onclick="viewUserHistory('{{ log.user_email }}')" title="View User History">
+                                            <i class="fas fa-user"></i>
+                                        </button>
+                                        <button class="action-btn" onclick="viewDetails('{{ log._id }}')" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-chart-line"></i>
+                        <h4 style="color: var(--text-primary) !important;">No Verification Data</h4>
+                        <p>No verification activities have been recorded yet.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="pagination-controls">
+                    <div class="results-info">
+                        Showing {{ verification_logs|length }} results
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Statistics Tab -->
+        <div id="users-tab" class="tab-content">
+            <div class="history-section">
+                <h3 class="section-title" style="color: var(--text-primary) !important; margin-bottom: 1.5rem;">
+                    <i class="fas fa-users"></i>
+                    User Verification Statistics
+                </h3>
+
+                <div class="user-stats-grid">
+                    {% for user_stat in user_stats %}
+                    <div class="user-stat-card">
+                        <div class="user-email">{{ user_stat.email }}</div>
+                        <div class="user-metrics">
+                            <div class="metric">
+                                <span class="metric-number">{{ user_stat.total }}</span>
+                                <span class="metric-label">Total</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-number" style="color: var(--accent-success) !important;">{{ user_stat.successful }}</span>
+                                <span class="metric-label">Success</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-number" style="color: var(--accent-error) !important;">{{ user_stat.failed }}</span>
+                                <span class="metric-label">Failed</span>
+                            </div>
+                        </div>
+                        <div class="success-rate-bar">
+                            <div class="success-rate-fill" style="width: {{ user_stat.success_rate }}%"></div>
+                        </div>
+                        <div style="text-align: center; margin-top: 0.5rem; color: var(--text-muted) !important; font-size: 0.875rem;">
+                            {{ "%.1f"|format(user_stat.success_rate) }}% Success Rate
+                        </div>
+                        {% if user_stat.last_activity %}
+                        <div style="text-align: center; margin-top: 0.5rem; color: var(--text-subtle) !important; font-size: 0.75rem;">
+                            Last: {{ user_stat.last_activity.strftime('%d %b %Y') }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User History Modal -->
+<div id="userHistoryModal" class="modal-overlay">
+    <div class="modal-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h3 style="color: var(--text-primary) !important; margin: 0;">User Verification History</h3>
+            <button onclick="closeModal()" style="background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="modalContent">
+            <!-- Content will be loaded dynamically -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    setupFilters();
+    animateSuccessRateBars();
+});
+
+function switchTab(tabName) {
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Remove active class from all buttons
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Show selected tab and activate button
+    document.getElementById(tabName + '-tab').classList.add('active');
+    event.target.classList.add('active');
+}
+
+function setupFilters() {
+    const userSearch = document.getElementById('userSearch');
+    const statusFilter = document.getElementById('statusFilter');
+    const dateFrom = document.getElementById('dateFrom');
+    const dateTo = document.getElementById('dateTo');
+    const licenseSearch = document.getElementById('licenseSearch');
+    const tableBody = document.getElementById('verificationTableBody');
+
+    function filterTable() {
+        const userTerm = userSearch?.value.toLowerCase() || '';
+        const statusValue = statusFilter?.value || '';
+        const fromDate = dateFrom?.value || '';
+        const toDate = dateTo?.value || '';
+        const licenseTerm = licenseSearch?.value.toLowerCase() || '';
+        
+        if (!tableBody) return;
+        
+        const rows = tableBody.getElementsByTagName('tr');
+
+        for (let row of rows) {
+            const user = row.dataset.user?.toLowerCase() || '';
+            const status = row.dataset.status || '';
+            const date = row.dataset.date || '';
+            const license = row.dataset.license?.toLowerCase() || '';
+
+            const matchesUser = !userTerm || user.includes(userTerm);
+            const matchesStatus = !statusValue || status === statusValue;
+            const matchesLicense = !licenseTerm || license.includes(licenseTerm);
+            
+            let matchesDate = true;
+            if (fromDate && date < fromDate) matchesDate = false;
+            if (toDate && date > toDate) matchesDate = false;
+
+            if (matchesUser && matchesStatus && matchesLicense && matchesDate) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        }
+        
+        updateResultsCount();
+    }
+
+    // Add event listeners
+    [userSearch, statusFilter, dateFrom, dateTo, licenseSearch].forEach(element => {
+        if (element) {
+            element.addEventListener('input', filterTable);
+            element.addEventListener('change', filterTable);
+        }
+    });
+}
+
+function clearFilters() {
+    document.getElementById('userSearch').value = '';
+    document.getElementById('statusFilter').value = '';
+    document.getElementById('dateFrom').value = '';
+    document.getElementById('dateTo').value = '';
+    document.getElementById('licenseSearch').value = '';
+    
+    // Show all rows
+    const rows = document.getElementById('verificationTableBody')?.getElementsByTagName('tr');
+    if (rows) {
+        for (let row of rows) {
+            row.style.display = '';
+        }
+    }
+    updateResultsCount();
+}
+
+function updateResultsCount() {
+    const rows = document.getElementById('verificationTableBody')?.getElementsByTagName('tr');
+    if (!rows) return;
+    
+    const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
+    const resultsInfo = document.querySelector('.results-info');
+    if (resultsInfo) {
+        resultsInfo.textContent = `Showing ${visibleRows.length} of ${rows.length} results`;
+    }
+}
+
+function animateSuccessRateBars() {
+    const bars = document.querySelectorAll('.success-rate-fill');
+    bars.forEach((bar, index) => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+            bar.style.width = width;
+        }, index * 100);
+    });
+}
+
+function viewUserHistory(userEmail) {
+    document.getElementById('userHistoryModal').style.display = 'block';
+    document.getElementById('modalContent').innerHTML = '<div style="text-align: center; padding: 2rem;"><i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--accent-primary);"></i></div>';
+    
+    fetch(`/api/admin/verification-history/user/${encodeURIComponent(userEmail)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                let content = `
+                    <div style="margin-bottom: 1.5rem;">
+                        <h4 style="color: var(--text-primary) !important;">${userEmail}</h4>
+                        <p style="color: var(--text-secondary) !important;">Total Verifications: ${data.total}</p>
+                    </div>
+                    <div class="table-container">
+                        <table class="table admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Status</th>
+                                    <th>License Verified</th>
+                                    <th>Processing Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                data.logs.forEach(log => {
+                    const date = new Date(log.verification_time);
+                    content += `
+                        <tr>
+                            <td>
+                                <div>${date.toLocaleDateString()}</div>
+                                <div style="color: var(--text-muted) !important; font-size: 0.75rem;">${date.toLocaleTimeString()}</div>
+                            </td>
+                            <td>
+                                <span class="status-badge status-${log.success ? 'success' : 'failed'}">
+                                    <i class="fas fa-${log.success ? 'check' : 'times'}"></i>
+                                    ${log.success ? 'Success' : 'Failed'}
+                                </span>
+                            </td>
+                            <td>${log.license_verified || 'Not Found'}</td>
+                            <td>${log.processing_time ? log.processing_time.toFixed(2) + 's' : 'N/A'}</td>
+                        </tr>
+                    `;
+                });
+                
+                content += '</tbody></table></div>';
+                document.getElementById('modalContent').innerHTML = content;
+            } else {
+                document.getElementById('modalContent').innerHTML = '<p style="color: var(--text-error) !important;">Error loading user history</p>';
+            }
+        })
+        .catch(error => {
+            document.getElementById('modalContent').innerHTML = '<p style="color: var(--text-error) !important;">Error loading user history</p>';
+        });
+}
+
+function viewDetails(logId) {
+    alert('View details functionality - Log ID: ' + logId);
+}
+
+function closeModal() {
+    document.getElementById('userHistoryModal').style.display = 'none';
+}
+
+function exportAllData() {
+    const rows = document.getElementById('verificationTableBody')?.getElementsByTagName('tr');
+    if (!rows) return;
+    
+    const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
+    
+    let csvContent = 'User Email,Date,Time,Status,License Verified,Processing Time,Match Score\n';
+    
+    visibleRows.forEach(row => {
+        const cells = row.getElementsByTagName('td');
+        const data = [
+            cells[0].querySelector('div:last-child div').textContent.trim(), // User email
+            cells[1].querySelector('div:first-child').textContent.trim(), // Date
+            cells[1].querySelector('div:last-child').textContent.trim(), // Time
+            cells[2].textContent.trim(), // Status
+            cells[3].textContent.trim(), // License
+            cells[4].textContent.trim(), // Processing time
+            cells[5].textContent.trim()  // Match score
+        ];
+        csvContent += data.map(field => `"${field}"`).join(',') + '\n';
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = `admin_verification_history_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+}
+
+// Close modal when clicking outside
+document.getElementById('userHistoryModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+</script>
+{% endblock %}

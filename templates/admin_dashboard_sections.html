@@ -1,0 +1,907 @@
+<!-- Verified Licenses Section -->
+<section id="verified-section" class="content-section">
+    <div class="section-header">
+        <h2 class="section-title">
+            <i class="fas fa-check-circle me-2" style="color: var(--accent-success);"></i>
+            Verified Licenses
+        </h2>
+        <div class="section-actions">
+            <input type="text" class="form-control me-2" placeholder="Search licenses..." style="width: 200px;">
+            <button class="action-btn" onclick="refreshVerifiedData()">
+                <i class="fas fa-sync-alt"></i>
+                Refresh
+            </button>
+            <button class="action-btn" onclick="exportVerifiedData()">
+                <i class="fas fa-download"></i>
+                Export
+            </button>
+        </div>
+    </div>
+    
+    <div class="data-table-container">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>License ID</th>
+                    <th>Holder Name</th>
+                    <th>Type</th>
+                    <th>Issue Date</th>
+                    <th>Status</th>
+                    <th>Verified By</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="verifiedLicensesTable">
+                <!-- Dynamic content will be loaded here -->
+                <tr>
+                    <td>DL-2024-001234</td>
+                    <td>John Doe</td>
+                    <td><span class="badge bg-info">Permanent</span></td>
+                    <td>2024-01-15</td>
+                    <td><span class="badge bg-success">Verified</span></td>
+                    <td>Admin System</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="viewLicense('DL-2024-001234')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-warning" onclick="editLicense('DL-2024-001234')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>DL-2024-001235</td>
+                    <td>Jane Smith</td>
+                    <td><span class="badge bg-primary">Learner</span></td>
+                    <td>2024-02-20</td>
+                    <td><span class="badge bg-success">Verified</span></td>
+                    <td>Admin System</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="viewLicense('DL-2024-001235')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-warning" onclick="editLicense('DL-2024-001235')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination -->
+    <nav aria-label="License pagination">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" style="background: var(--dark-elevated); border-color: var(--border-color); color: var(--text-muted);">Previous</a>
+            </li>
+            <li class="page-item active">
+                <a class="page-link" href="#" style="background: var(--accent-primary); border-color: var(--accent-primary);">1</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#" style="background: var(--dark-elevated); border-color: var(--border-color); color: var(--text-secondary);">2</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#" style="background: var(--dark-elevated); border-color: var(--border-color); color: var(--text-secondary);">Next</a>
+            </li>
+        </ul>
+    </nav>
+</section>
+
+<!-- Pending Verifications Section -->
+<section id="pending-section" class="content-section">
+    <div class="section-header">
+        <h2 class="section-title">
+            <i class="fas fa-clock me-2" style="color: var(--accent-warning);"></i>
+            Pending Verifications
+        </h2>
+        <div class="section-actions">
+            <select class="form-select me-2" style="width: auto;">
+                <option>All Priorities</option>
+                <option>High Priority</option>
+                <option>Medium Priority</option>
+                <option>Low Priority</option>
+            </select>
+            <button class="action-btn" onclick="refreshPendingData()">
+                <i class="fas fa-sync-alt"></i>
+                Refresh
+            </button>
+            <button class="action-btn" onclick="bulkProcessPending()">
+                <i class="fas fa-tasks"></i>
+                Bulk Process
+            </button>
+        </div>
+    </div>
+    
+    <div class="data-table-container">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" class="form-check-input" id="selectAll">
+                    </th>
+                    <th>License ID</th>
+                    <th>Applicant Name</th>
+                    <th>Application Date</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="form-check-input">
+                    </td>
+                    <td>DL-2024-002001</td>
+                    <td>Michael Johnson</td>
+                    <td>2024-06-02</td>
+                    <td><span class="badge bg-danger">High</span></td>
+                    <td><span class="badge bg-warning">Pending Review</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-success me-1" onclick="approveLicense('DL-2024-002001')">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger me-1" onclick="rejectLicense('DL-2024-002001')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary" onclick="reviewLicense('DL-2024-002001')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="form-check-input">
+                    </td>
+                    <td>DL-2024-002002</td>
+                    <td>Sarah Wilson</td>
+                    <td>2024-06-01</td>
+                    <td><span class="badge bg-info">Medium</span></td>
+                    <td><span class="badge bg-warning">Document Review</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-success me-1" onclick="approveLicense('DL-2024-002002')">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger me-1" onclick="rejectLicense('DL-2024-002002')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary" onclick="reviewLicense('DL-2024-002002')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Analytics Section -->
+<section id="analytics-section" class="content-section">
+    <div class="section-header">
+        <h2 class="section-title">
+            <i class="fas fa-chart-bar me-2" style="color: var(--accent-primary);"></i>
+            Analytics & Performance
+        </h2>
+        <div class="section-actions">
+            <select class="form-select me-2" style="width: auto;">
+                <option>Last 7 Days</option>
+                <option>Last 30 Days</option>
+                <option>Last 90 Days</option>
+                <option>Custom Range</option>
+            </select>
+            <button class="action-btn" onclick="refreshAnalytics()">
+                <i class="fas fa-sync-alt"></i>
+                Refresh
+            </button>
+            <button class="action-btn" onclick="exportAnalytics()">
+                <i class="fas fa-file-export"></i>
+                Export
+            </button>
+        </div>
+    </div>
+
+    <!-- Performance Metrics -->
+    <div class="stats-grid mb-4">
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <i class="fas fa-stopwatch"></i>
+                </div>
+            </div>
+            <h3 class="stat-number">2.3s</h3>
+            <p class="stat-label">Avg Process Time</p>
+            <div class="stat-change positive">
+                <i class="fas fa-arrow-down"></i>
+                -15% faster
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <i class="fas fa-percentage"></i>
+                </div>
+            </div>
+            <h3 class="stat-number">99.7%</h3>
+            <p class="stat-label">Accuracy Rate</p>
+            <div class="stat-change positive">
+                <i class="fas fa-arrow-up"></i>
+                +2% improved
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <i class="fas fa-server"></i>
+                </div>
+            </div>
+            <h3 class="stat-number">99.9%</h3>
+            <p class="stat-label">Uptime</p>
+            <div class="stat-change positive">
+                <i class="fas fa-check"></i>
+                Excellent
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
+            <h3 class="stat-number">1,247</h3>
+            <p class="stat-label">Active Users</p>
+            <div class="stat-change positive">
+                <i class="fas fa-arrow-up"></i>
+                +23% growth
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-3">
+        <div class="col-lg-8">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>Verification Analytics</h3>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-sm btn-outline-primary active">Daily</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary">Weekly</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary">Monthly</button>
+                    </div>
+                </div>
+                <div class="widget-content">
+                    <canvas id="analyticsChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>License Types Distribution</h3>
+                </div>
+                <div class="widget-content">
+                    <canvas id="licenseTypesChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- User Management Section -->
+<section id="users-section" class="content-section">
+    <div class="section-header">
+        <h2 class="section-title">
+            <i class="fas fa-users me-2" style="color: var(--accent-primary);"></i>
+            User Management
+        </h2>
+        <div class="section-actions">
+            <input type="text" class="form-control me-2" placeholder="Search users..." style="width: 200px;">
+            <select class="form-select me-2" style="width: auto;">
+                <option>All Roles</option>
+                <option>Admins</option>
+                <option>Users</option>
+            </select>
+            <button class="action-btn" onclick="refreshUserData()">
+                <i class="fas fa-sync-alt"></i>
+                Refresh
+            </button>
+            <button class="action-btn" onclick="showAddUserModal()">
+                <i class="fas fa-user-plus"></i>
+                Add User
+            </button>
+        </div>
+    </div>
+
+    <div class="data-table-container">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in recent_users %}
+                <tr>
+                    <td>{{ user._id[:8] }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phone if user.phone else 'N/A' }}</td>
+                    <td><span class="badge bg-primary">{{ user.role.title() }}</span></td>
+                    <td><span class="badge bg-success">Active</span></td>
+                    <td>{{ user.created_at.strftime('%m/%d/%y') if user.created_at else 'N/A' }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="viewUser('{{ user._id }}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-warning me-1" onclick="editUser('{{ user._id }}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="toggleUserStatus('{{ user._id }}')">
+                            <i class="fas fa-ban"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Reports Section -->
+<section id="reports-section" class="content-section">
+    <div class="section-header">
+        <h2 class="section-title">
+            <i class="fas fa-file-alt me-2" style="color: var(--text-secondary);"></i>
+            Reports & Logs
+        </h2>
+        <div class="section-actions">
+            <select class="form-select me-2" style="width: auto;">
+                <option>All Reports</option>
+                <option>System Reports</option>
+                <option>User Reports</option>
+                <option>Error Reports</option>
+            </select>
+            <button class="action-btn" onclick="refreshReports()">
+                <i class="fas fa-sync-alt"></i>
+                Refresh
+            </button>
+            <button class="action-btn" onclick="generateCustomReport()">
+                <i class="fas fa-plus"></i>
+                Generate
+            </button>
+        </div>
+    </div>
+
+    <!-- Report Categories -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="action-button h-100" onclick="generateReport('daily')">
+                <i class="fas fa-chart-line mb-2"></i>
+                <h6>Daily Report</h6>
+                <small class="text-muted">System activity for today</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="action-button h-100" onclick="generateReport('user-activity')">
+                <i class="fas fa-users mb-2"></i>
+                <h6>User Activity</h6>
+                <small class="text-muted">User login and actions</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="action-button h-100" onclick="generateReport('security')">
+                <i class="fas fa-shield-alt mb-2"></i>
+                <h6>Security Log</h6>
+                <small class="text-muted">Security events and alerts</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="action-button h-100" onclick="generateReport('error')">
+                <i class="fas fa-exclamation-triangle mb-2"></i>
+                <h6>Error Log</h6>
+                <small class="text-muted">System errors and warnings</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Reports -->
+    <div class="widget">
+        <div class="widget-header">
+            <h3>Recent Reports</h3>
+            <button class="btn btn-sm btn-outline-primary" onclick="viewAllReports()">
+                View All
+            </button>
+        </div>
+        <div class="widget-content">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Report Name</th>
+                            <th>Type</th>
+                            <th>Generated</th>
+                            <th>Size</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Daily System Report - {{ datetime.now().strftime('%Y-%m-%d') }}</td>
+                            <td><span class="badge bg-info">System</span></td>
+                            <td>{{ datetime.now().strftime('%H:%M') }}</td>
+                            <td>2.4 MB</td>
+                            <td><span class="badge bg-success">Ready</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="downloadReport('daily-2024')">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="viewReport('daily-2024')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>User Activity Report - Weekly</td>
+                            <td><span class="badge bg-primary">User</span></td>
+                            <td>{{ (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d') }}</td>
+                            <td>1.8 MB</td>
+                            <td><span class="badge bg-success">Ready</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="downloadReport('user-weekly')">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="viewReport('user-weekly')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Settings Section -->
+<section id="settings-section" class="content-section">
+    <div class="section-header">
+        <h2 class="section-title">
+            <i class="fas fa-cog me-2" style="color: var(--text-secondary);"></i>
+            System Settings
+        </h2>
+        <div class="section-actions">
+            <button class="action-btn" onclick="resetAllSettings()">
+                <i class="fas fa-undo"></i>
+                Reset
+            </button>
+            <button class="action-btn" onclick="saveAllSettings()">
+                <i class="fas fa-save"></i>
+                Save All
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Application Settings -->
+        <div class="col-lg-6">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>Application Settings</h3>
+                </div>
+                <div class="widget-content">
+                    <form id="applicationSettings">
+                        <div class="mb-3">
+                            <label class="form-label">System Name</label>
+                            <input type="text" class="form-control" value="DL Verification System" name="system_name">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Time Zone</label>
+                            <select class="form-select" name="timezone">
+                                <option value="Asia/Kolkata" selected>Asia/Kolkata (IST)</option>
+                                <option value="UTC">UTC</option>
+                                <option value="US/Eastern">US/Eastern</option>
+                                <option value="Europe/London">Europe/London</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Default Language</label>
+                            <select class="form-select" name="language">
+                                <option value="en" selected>English</option>
+                                <option value="hi">Hindi</option>
+                                <option value="regional">Regional</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Records Per Page</label>
+                            <select class="form-select" name="records_per_page">
+                                <option value="10">10</option>
+                                <option value="25" selected>25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Security Settings -->
+        <div class="col-lg-6">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>Security Settings</h3>
+                </div>
+                <div class="widget-content">
+                    <form id="securitySettings">
+                        <div class="mb-3">
+                            <label class="form-label">Session Timeout (minutes)</label>
+                            <input type="number" class="form-control" value="30" min="5" max="480" name="session_timeout">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Face Recognition Threshold (%)</label>
+                            <input type="range" class="form-range" min="60" max="99" value="85" id="recognitionThreshold" name="recognition_threshold">
+                            <div class="text-center mt-1">
+                                <span id="thresholdValue" class="badge bg-primary">85%</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Maximum Login Attempts</label>
+                            <input type="number" class="form-control" value="3" min="1" max="10" name="max_login_attempts">
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="twoFactorAuth" name="two_factor_auth" checked>
+                            <label class="form-check-label" for="twoFactorAuth">
+                                Two-Factor Authentication
+                            </label>
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="auditLogging" name="audit_logging" checked>
+                            <label class="form-check-label" for="auditLogging">
+                                Audit Logging
+                            </label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="emailNotifications" name="email_notifications" checked>
+                            <label class="form-check-label" for="emailNotifications">
+                                Email Notifications
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Database Settings -->
+        <div class="col-lg-6">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>Database Settings</h3>
+                </div>
+                <div class="widget-content">
+                    <form id="databaseSettings">
+                        <div class="mb-3">
+                            <label class="form-label">Backup Frequency</label>
+                            <select class="form-select" name="backup_frequency">
+                                <option value="daily" selected>Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Data Retention (days)</label>
+                            <input type="number" class="form-control" value="365" min="30" max="2555" name="data_retention">
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="autoBackup" name="auto_backup" checked>
+                            <label class="form-check-label" for="autoBackup">
+                                Automatic Backup
+                            </label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="dataCompression" name="data_compression" checked>
+                            <label class="form-check-label" for="dataCompression">
+                                Data Compression
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Settings -->
+        <div class="col-lg-6">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>Notification Settings</h3>
+                </div>
+                <div class="widget-content">
+                    <form id="notificationSettings">
+                        <div class="mb-3">
+                            <label class="form-label">Admin Email</label>
+                            <input type="email" class="form-control" value="admin@dlverification.com" name="admin_email">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">SMTP Server</label>
+                            <input type="text" class="form-control" value="smtp.gmail.com" name="smtp_server">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">SMTP Port</label>
+                            <input type="number" class="form-control" value="587" name="smtp_port">
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="newUserNotification" name="new_user_notification" checked>
+                            <label class="form-check-label" for="newUserNotification">
+                                New User Registration
+                            </label>
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="systemErrorNotification" name="system_error_notification" checked>
+                            <label class="form-check-label" for="systemErrorNotification">
+                                System Errors
+                            </label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="dailyReportNotification" name="daily_report_notification">
+                            <label class="form-check-label" for="dailyReportNotification">
+                                Daily Reports
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add JavaScript for all sections -->
+<script>
+// Section-specific JavaScript functions
+
+// Verified Licenses Functions
+function refreshVerifiedData() {
+    showNotification('Refreshing verified licenses data...', 'info');
+    // Implement API call
+}
+
+function exportVerifiedData() {
+    showNotification('Exporting verified licenses data...', 'info');
+    // Implement export functionality
+}
+
+function viewLicense(licenseId) {
+    showNotification(`Viewing license: ${licenseId}`, 'info');
+    // Implement view modal
+}
+
+function editLicense(licenseId) {
+    showNotification(`Editing license: ${licenseId}`, 'info');
+    // Implement edit modal
+}
+
+// Pending Verifications Functions
+function refreshPendingData() {
+    showNotification('Refreshing pending verifications...', 'info');
+}
+
+function bulkProcessPending() {
+    const checkboxes = document.querySelectorAll('#pending-section input[type="checkbox"]:checked');
+    if (checkboxes.length === 0) {
+        showNotification('Please select items to process', 'warning');
+        return;
+    }
+    showNotification(`Processing ${checkboxes.length} items...`, 'info');
+}
+
+function approveLicense(licenseId) {
+    if (confirm(`Approve license ${licenseId}?`)) {
+        showNotification(`License ${licenseId} approved`, 'success');
+    }
+}
+
+function rejectLicense(licenseId) {
+    if (confirm(`Reject license ${licenseId}?`)) {
+        showNotification(`License ${licenseId} rejected`, 'warning');
+    }
+}
+
+function reviewLicense(licenseId) {
+    showNotification(`Opening review for ${licenseId}`, 'info');
+}
+
+// Analytics Functions
+function refreshAnalytics() {
+    showNotification('Refreshing analytics data...', 'info');
+    // Reinitialize charts
+    initializeAnalyticsCharts();
+}
+
+function exportAnalytics() {
+    showNotification('Exporting analytics report...', 'info');
+}
+
+function initializeAnalyticsCharts() {
+    // Analytics Chart
+    const analyticsCtx = document.getElementById('analyticsChart');
+    if (analyticsCtx) {
+        new Chart(analyticsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Verifications',
+                    data: [120, 190, 300, 500, 200, 300, 450],
+                    backgroundColor: 'rgba(139, 92, 246, 0.5)',
+                    borderColor: '#8b5cf6',
+                    borderWidth: 2
+                }, {
+                    label: 'Registrations',
+                    data: [50, 80, 120, 200, 100, 150, 180],
+                    backgroundColor: 'rgba(16, 185, 129, 0.5)',
+                    borderColor: '#10b981',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#373e47' },
+                        ticks: { color: '#94a3b8' }
+                    },
+                    x: {
+                        grid: { color: '#373e47' },
+                        ticks: { color: '#94a3b8' }
+                    }
+                }
+            }
+        });
+    }
+
+    // License Types Chart
+    const licenseTypesCtx = document.getElementById('licenseTypesChart');
+    if (licenseTypesCtx) {
+        new Chart(licenseTypesCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Permanent', 'Learner', 'Commercial', 'International'],
+                datasets: [{
+                    data: [65, 20, 10, 5],
+                    backgroundColor: [
+                        '#8b5cf6',
+                        '#10b981',
+                        '#f59e0b',
+                        '#ef4444'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#94a3b8' }
+                    }
+                }
+            }
+        });
+    }
+}
+
+// User Management Functions
+function refreshUserData() {
+    showNotification('Refreshing user data...', 'info');
+}
+
+function showAddUserModal() {
+    showNotification('Opening add user form...', 'info');
+    // Implement add user modal
+}
+
+function viewUser(userId) {
+    showNotification(`Viewing user: ${userId}`, 'info');
+}
+
+function editUser(userId) {
+    showNotification(`Editing user: ${userId}`, 'info');
+}
+
+function toggleUserStatus(userId) {
+    if (confirm('Toggle user status?')) {
+        showNotification(`User status updated: ${userId}`, 'success');
+    }
+}
+
+// Reports Functions
+function refreshReports() {
+    showNotification('Refreshing reports...', 'info');
+}
+
+function generateCustomReport() {
+    showNotification('Opening custom report generator...', 'info');
+}
+
+function generateReport(type) {
+    showNotification(`Generating ${type} report...`, 'info');
+}
+
+function downloadReport(reportId) {
+    showNotification(`Downloading report: ${reportId}`, 'info');
+}
+
+function viewReport(reportId) {
+    showNotification(`Viewing report: ${reportId}`, 'info');
+}
+
+function viewAllReports() {
+    showNotification('Opening all reports view...', 'info');
+}
+
+// Settings Functions
+function resetAllSettings() {
+    if (confirm('Reset all settings to defaults? This action cannot be undone.')) {
+        showNotification('All settings reset to defaults', 'warning');
+    }
+}
+
+function saveAllSettings() {
+    const forms = ['applicationSettings', 'securitySettings', 'databaseSettings', 'notificationSettings'];
+    let allValid = true;
+    
+    forms.forEach(formId => {
+        const form = document.getElementById(formId);
+        if (form && !form.checkValidity()) {
+            allValid = false;
+        }
+    });
+    
+    if (allValid) {
+        showNotification('All settings saved successfully!', 'success');
+    } else {
+        showNotification('Please check all form fields', 'error');
+    }
+}
+
+// Range input handler for threshold
+document.addEventListener('DOMContentLoaded', function() {
+    const rangeInput = document.getElementById('recognitionThreshold');
+    const valueDisplay = document.getElementById('thresholdValue');
+    
+    if (rangeInput && valueDisplay) {
+        rangeInput.addEventListener('input', function() {
+            valueDisplay.textContent = this.value + '%';
+        });
+    }
+    
+    // Select all checkbox handler
+    const selectAllCheckbox = document.getElementById('selectAll');
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('#pending-section tbody input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = this.checked);
+        });
+    }
+    
+    // Initialize analytics charts when analytics section is first viewed
+    const analyticsButton = document.querySelector('[data-section="analytics"]');
+    if (analyticsButton) {
+        analyticsButton.addEventListener('click', function() {
+            setTimeout(initializeAnalyticsCharts, 100);
+        });
+    }
+});
+</script>

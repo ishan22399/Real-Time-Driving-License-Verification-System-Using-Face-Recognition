@@ -1,0 +1,9 @@
+Flask
+pymongo
+opencv-python-headless
+numpy
+face-recognition
+matplotlib
+firebase-admin
+werkzeug
+pytz

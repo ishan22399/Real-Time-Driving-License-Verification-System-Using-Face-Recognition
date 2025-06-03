@@ -1,0 +1,441 @@
+{% extends "base.html" %}
+
+{% block title %}License Management - Admin Panel{% endblock %}
+
+{% block extra_head %}
+<style>
+    .license-card {
+        transition: transform 0.2s ease;
+        cursor: pointer;
+    }
+    
+    .license-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+    }
+    
+    .license-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    
+    .status-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+    }
+    
+    .status-verified { background-color: var(--accent-success); }
+    .status-pending { background-color: var(--accent-warning); }
+    .status-rejected { background-color: var(--accent-error); }
+
+    .stats-card {
+        background: var(--dark-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .stats-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .stats-icon {
+        width: 50px;
+        height: 50px;
+        margin: 0 auto 1rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-1">License Management</h2>
+                    <p class="text-muted mb-0">Manage driving licenses and verification status</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('license') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Add New License
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-2">
+            <div class="stats-card">
+                <div class="stats-icon" style="background: var(--accent-primary);">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <h4>{{ total_licenses or 0 }}</h4>
+                <small>Total Licenses</small>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="stats-card">
+                <div class="stats-icon" style="background: var(--accent-success);">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h4>{{ verified_licenses or 0 }}</h4>
+                <small>Verified</small>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="stats-card">
+                <div class="stats-icon" style="background: var(--accent-warning);">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h4>{{ pending_licenses or 0 }}</h4>
+                <small>Pending</small>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="stats-card">
+                <div class="stats-icon" style="background: var(--accent-error);">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <h4>{{ rejected_licenses or 0 }}</h4>
+                <small>Rejected</small>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="stats-card">
+                <div class="stats-icon" style="background: var(--accent-tertiary);">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <h4>{{ today_licenses or 0 }}</h4>
+                <small>Today</small>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="stats-card">
+                <div class="stats-icon" style="background: var(--text-muted);">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h4>{{ expiring_licenses or 0 }}</h4>
+                <small>Expiring</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="card mb-4" style="background: var(--dark-card); border-color: var(--border-color);">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="text" class="form-control" placeholder="Search by name or license number..." id="licenseSearch">
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="verified">Verified</option>
+                        <option value="pending">Pending</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" id="typeFilter">
+                        <option value="">All Types</option>
+                        <option value="Permanent">Permanent</option>
+                        <option value="Learner">Learner</option>
+                        <option value="Commercial">Commercial</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="date" class="form-control" id="dateFilter">
+                </div>
+                <div class="col-md-3">
+                    <div class="btn-group w-100" role="group">
+                        <button class="btn btn-outline-secondary" onclick="exportLicenses()">
+                            <i class="fas fa-download me-1"></i>Export
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="refreshLicenses()">
+                            <i class="fas fa-sync-alt me-1"></i>Refresh
+                        </button>
+                        <button class="btn btn-outline-primary" onclick="bulkActions()">
+                            <i class="fas fa-tasks me-1"></i>Bulk
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Licenses Table -->
+    <div class="card" style="background: var(--dark-card); border-color: var(--border-color);">
+        <div class="card-header" style="background: var(--dark-elevated); border-color: var(--border-color);">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">All Licenses</h5>
+                <div class="btn-group btn-group-sm" role="group">
+                    <button class="btn btn-outline-secondary active" onclick="toggleView('table')">
+                        <i class="fas fa-table"></i>
+                    </button>
+                    <button class="btn btn-outline-secondary" onclick="toggleView('grid')">
+                        <i class="fas fa-th"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <!-- Table View -->
+            <div id="tableView" class="table-responsive">
+                <table class="table table-hover" id="licensesTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" class="form-check-input" id="selectAll">
+                            </th>
+                            <th>License</th>
+                            <th>Holder</th>
+                            <th>Type</th>
+                            <th>Issue Date</th>
+                            <th>Expiry Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for license in licenses %}
+                        <tr class="license-row">
+                            <td>
+                                <input type="checkbox" class="form-check-input license-checkbox" value="{{ license._id }}">
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if license.license_image_path %}
+                                    <img src="{{ license.license_image_path }}" alt="License" class="license-image me-3" onerror="this.src='/static/placeholder-license.png'">
+                                    {% else %}
+                                    <div class="license-image me-3 bg-secondary d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-id-card text-white"></i>
+                                    </div>
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="mb-0">{{ license.dl_number }}</h6>
+                                        <small class="text-muted">{{ license.issuing_authority or 'RTO' }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <h6 class="mb-0">{{ license.name }}</h6>
+                                    <small class="text-muted">{{ license.gender }}, DOB: {{ license.dob }}</small>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">{{ license.vt or 'Standard' }}</span>
+                            </td>
+                            <td>{{ license.doi or 'N/A' }}</td>
+                            <td>
+                                {% if license.doi %}
+                                    {% set parts = license.doi.split('-') %}
+                                    {% if parts|length == 3 %}
+                                        <span class="text-warning">{{ (parts[0]|int + 20) }}-{{ parts[1] }}-{{ parts[2] }}</span>
+                                    {% else %}
+                                        <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="text-muted">N/A</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="status-indicator status-verified"></span>
+                                <span class="badge bg-success">Verified</span>
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="viewLicense('{{ license._id }}')" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-warning" onclick="editLicense('{{ license._id }}')" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteLicense('{{ license._id }}')" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center text-muted">No licenses found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Grid View (Hidden by default) -->
+            <div id="gridView" class="row g-3" style="display: none;">
+                {% for license in licenses %}
+                <div class="col-md-4">
+                    <div class="license-card card h-100" style="background: var(--dark-elevated); border-color: var(--border-color);">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                {% if license.license_image_path %}
+                                <img src="{{ license.license_image_path }}" alt="License" class="license-image me-3">
+                                {% else %}
+                                <div class="license-image me-3 bg-secondary d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-id-card text-white"></i>
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <h6 class="mb-0">{{ license.dl_number }}</h6>
+                                    <small class="text-muted">{{ license.name }}</small>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-success">Verified</span>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="viewLicense('{{ license._id }}')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-warning" onclick="editLicense('{{ license._id }}')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function viewLicense(licenseId) {
+    fetch(`/api/admin/license/${licenseId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`Viewing license: ${data.license.dl_number}`);
+            } else {
+                alert('Error loading license details');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error loading license details');
+        });
+}
+
+function editLicense(licenseId) {
+    alert(`Edit license: ${licenseId}`);
+}
+
+function deleteLicense(licenseId) {
+    if (confirm('Are you sure you want to delete this license?')) {
+        fetch(`/api/admin/license/${licenseId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('License deleted successfully');
+                location.reload();
+            } else {
+                alert('Error deleting license: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting license');
+        });
+    }
+}
+
+function exportLicenses() {
+    alert('Exporting licenses...');
+}
+
+function refreshLicenses() {
+    location.reload();
+}
+
+function bulkActions() {
+    const selected = document.querySelectorAll('.license-checkbox:checked');
+    if (selected.length === 0) {
+        alert('Please select licenses to perform bulk actions');
+        return;
+    }
+    alert(`Bulk action on ${selected.length} licenses`);
+}
+
+function toggleView(view) {
+    const tableView = document.getElementById('tableView');
+    const gridView = document.getElementById('gridView');
+    const buttons = document.querySelectorAll('.btn-group button');
+    
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    if (view === 'table') {
+        tableView.style.display = 'block';
+        gridView.style.display = 'none';
+        buttons[0].classList.add('active');
+    } else {
+        tableView.style.display = 'none';
+        gridView.style.display = 'flex';
+        buttons[1].classList.add('active');
+    }
+}
+
+// Search and filter functionality
+document.getElementById('licenseSearch').addEventListener('input', filterLicenses);
+document.getElementById('statusFilter').addEventListener('change', filterLicenses);
+document.getElementById('typeFilter').addEventListener('change', filterLicenses);
+
+function filterLicenses() {
+    const search = document.getElementById('licenseSearch').value.toLowerCase();
+    const statusFilter = document.getElementById('statusFilter').value;
+    const typeFilter = document.getElementById('typeFilter').value;
+    
+    const rows = document.querySelectorAll('#licensesTable tbody tr');
+    
+    rows.forEach(row => {
+        if (row.cells.length < 8) return; // Skip empty rows
+        
+        const license = row.cells[1] ? row.cells[1].textContent.toLowerCase() : '';
+        const holder = row.cells[2] ? row.cells[2].textContent.toLowerCase() : '';
+        const type = row.cells[3] ? row.cells[3].textContent.toLowerCase() : '';
+        const status = row.cells[6] ? row.cells[6].textContent.toLowerCase() : '';
+        
+        const matchesSearch = license.includes(search) || holder.includes(search);
+        const matchesStatus = !statusFilter || status.includes(statusFilter);
+        const matchesType = !typeFilter || type.includes(typeFilter);
+        
+        row.style.display = matchesSearch && matchesStatus && matchesType ? '' : 'none';
+    });
+}
+
+// Select all functionality
+document.getElementById('selectAll').addEventListener('change', function() {
+    const checkboxes = document.querySelectorAll('.license-checkbox');
+    checkboxes.forEach(cb => cb.checked = this.checked);
+});
+</script>
+{% endblock %}

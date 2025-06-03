@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Driving License Verification System{% endblock %}</title>
+    
+    <!-- Modern CSS Framework -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Professional Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Enhanced Professional Dark Theme Styles -->
+    <style>
+        :root {
+            /* Professional Dark Background Palette */
+            --dark-bg: #0d1117;
+            --dark-secondary: #1c2128;
+            --dark-tertiary: #262c36;
+            --dark-quaternary: #373e47;
+            --dark-surface: #21262d;
+            --dark-elevated: #2d333b;
+            --dark-card: #161b22;
+            
+            /* Premium Accent Colors - Updated Header Colors */
+            --accent-primary: #8b5cf6;
+            --accent-secondary: #a855f7;
+            --accent-tertiary: #06b6d4;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-error: #ef4444;
+            --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%);
+            --accent-glow: linear-gradient(135deg, #8b5cf622, #a855f744, #c084fc22);
+            
+            /* Professional Text Colors - Maximum Readability */
+            --text-primary: #f8fafc;
+            --text-secondary: #e2e8f0;
+            --text-tertiary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --text-subtle: #64748b;
+            --text-accent: #ffffff;
+            --text-brand: #8b5cf6;
+            --text-highlight: #fbbf24;
+            --text-success: #34d399;
+            --text-warning: #fbbf24;
+            --text-error: #f87171;
+            --text-info: #60a5fa;
+            
+            /* Glass Morphism Effects */
+            --glass-bg: rgba(248, 250, 252, 0.05);
+            --glass-border: rgba(248, 250, 252, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --glass-shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+            
+            /* Interactive States - Updated to use purple */
+            --hover-bg: rgba(139, 92, 246, 0.1);
+            --hover-bg-light: rgba(139, 92, 246, 0.05);
+            --active-bg: rgba(139, 92, 246, 0.15);
+            --focus-ring: rgba(139, 92, 246, 0.3);
+            --border-color: #373e47;
+            --border-hover: #8b5cf6;
+            --border-focus: #a855f7;
+            
+            /* Professional Shadows */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.25);
+            --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Enhanced Global Styling */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--dark-bg) !important;
+            color: var(--text-primary) !important;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+            font-weight: 400;
+            line-height: 1.65;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* Professional Typography */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-primary) !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.025em;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+            margin-bottom: 1rem;
+        }
+
+        h1 { font-size: 2.5rem; font-weight: 800 !important; }
+        h2 { font-size: 2rem; font-weight: 750 !important; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.5rem; }
+        h5 { font-size: 1.25rem; }
+        h6 { font-size: 1.125rem; }
+
+        p {
+            color: var(--text-secondary) !important;
+            font-weight: 400;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .text-muted {
+            color: var(--text-muted) !important;
+            font-weight: 500 !important;
+        }
+
+        small {
+            color: var(--text-subtle) !important;
+            font-weight: 500;
+        }
+
+        /* Professional Navigation */
+        .navbar {
+            background: rgba(28, 33, 40, 0.95) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar-brand {
+            color: var(--text-accent) !important;
+            font-weight: 800 !important;
+            font-size: 1.5rem !important;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--text-secondary) !important;
+            font-weight: 600 !important;
+            padding: 0.75rem 1.25rem !important;
+            border-radius: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 0 0.125rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .navbar-nav .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-glow);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--text-accent) !important;
+            background: var(--hover-bg) !important;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .navbar-nav .nav-link:hover::before {
+            left: 100%;
+        }
+
+        .navbar-nav .nav-link.active {
+            color: var(--text-brand) !important;
+            background: var(--active-bg) !important;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Enhanced Dropdown Styling */
+        .dropdown-menu {
+            background: var(--dark-elevated) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 16px !important;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-xl) !important;
+            padding: 1rem !important;
+            margin-top: 0.5rem !important;
+        }
+
+        .dropdown-item {
+            color: var(--text-secondary) !important;
+            font-weight: 500 !important;
+            padding: 0.875rem 1.25rem !important;
+            border-radius: 10px !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 0.25rem;
+        }
+
+        .dropdown-item:hover {
+            color: var(--text-accent) !important;
+            background: var(--hover-bg) !important;
+            transform: translateX(4px);
+        }
+
+        .dropdown-header {
+            color: var(--text-primary) !important;
+            font-weight: 700 !important;
+            font-size: 0.875rem !important;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .dropdown-item-text {
+            color: var(--text-muted) !important;
+            font-weight: 400 !important;
+        }
+
+        .dropdown-divider {
+            border-color: var(--border-color) !important;
+            margin: 0.75rem 0 !important;
+            opacity: 0.6;
+        }
+
+        /* Premium Badge Styling */
+        .badge {
+            font-weight: 700 !important;
+            padding: 0.5rem 0.875rem !important;
+            border-radius: 10px !important;
+            text-shadow: none !important;
+            font-size: 0.75rem !important;
+            letter-spacing: 0.025em;
+        }
+
+        .badge.bg-warning {
+            background: linear-gradient(135deg, var(--accent-warning), #fb923c) !important;
+            color: var(--dark-bg) !important;
+            box-shadow: 0 2px 8px rgba(251, 146, 60, 0.3);
+        }
+
+        /* Enhanced Button Styling */
+        .btn-outline-light {
+            border: 2px solid var(--accent-primary) !important;
+            color: var(--accent-primary) !important;
+            font-weight: 700 !important;
+            border-radius: 12px !important;
+            padding: 0.75rem 1.5rem !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-outline-light::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-gradient);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+
+        .btn-outline-light:hover {
+            color: white !important;
+            border-color: var(--accent-primary) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-outline-light:hover::before {
+            left: 0;
+        }
+
+        /* Professional Alert Styling */
+        .alert {
+            border: none !important;
+            border-radius: 16px !important;
+            font-weight: 600 !important;
+            backdrop-filter: blur(12px);
+            margin-bottom: 1.5rem;
+            padding: 1.25rem 1.5rem !important;
+            box-shadow: var(--shadow-md);
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.15) !important;
+            color: var(--text-success) !important;
+            border-left: 4px solid var(--accent-success) !important;
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.15) !important;
+            color: var(--text-error) !important;
+            border-left: 4px solid var(--accent-error) !important;
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.15) !important;
+            color: var(--text-warning) !important;
+            border-left: 4px solid var(--accent-warning) !important;
+        }
+
+        .alert-info {
+            background: rgba(64, 158, 255, 0.15) !important;
+            color: var(--text-info) !important;
+            border-left: 4px solid var(--accent-primary) !important;
+        }
+
+        /* Professional Footer */
+        footer.bg-dark {
+            background: var(--dark-secondary) !important;
+            border-top: 1px solid var(--border-color);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        footer h5 {
+            color: var(--text-primary) !important;
+            font-weight: 800 !important;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        footer p {
+            color: var(--text-tertiary) !important;
+            font-weight: 400 !important;
+            line-height: 1.6;
+        }
+
+        footer .text-muted {
+            color: var(--text-muted) !important;
+            font-weight: 500 !important;
+        }
+
+        footer .text-warning {
+            color: var(--text-warning) !important;
+            font-weight: 600 !important;
+        }
+
+        .hover-link {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0.375rem 0;
+            display: inline-block;
+            text-decoration: none !important;
+        }
+
+        .hover-link:hover {
+            color: var(--accent-primary) !important;
+            transform: translateX(8px);
+        }
+
+        .social-links a {
+            color: var(--text-muted) !important;
+            font-size: 1.25rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0.75rem;
+            border-radius: 12px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            margin: 0 0.25rem;
+        }
+
+        .social-links a:hover {
+            color: var(--accent-primary) !important;
+            background: var(--hover-bg);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.2);
+        }
+
+        /* Main Content */
+        main {
+            min-height: calc(100vh - 200px);
+            padding-top: 100px !important;
+        }
+
+        /* Navbar Toggler */
+        .navbar-toggler {
+            border: 2px solid var(--accent-primary) !important;
+            border-radius: 8px !important;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2) !important;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%238b5cf6' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+        }
+
+        /* Enhanced Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .navbar-nav .nav-link {
+                padding: 1rem 1.5rem !important;
+                margin: 0.25rem 0;
+                text-align: center;
+                border-radius: 12px;
+            }
+
+            .social-links {
+                text-align: center !important;
+                margin-top: 1.5rem;
+            }
+
+            main {
+                padding-top: 80px !important;
+            }
+
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.75rem; }
+        }
+
+        /* Professional Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-secondary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 5px;
+            border: 2px solid var(--dark-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-tertiary));
+        }
+
+        /* Enhanced Focus States */
+        *:focus {
+            outline: 2px solid var(--accent-primary) !important;
+            outline-offset: 2px !important;
+            box-shadow: 0 0 0 4px var(--focus-ring) !important;
+        }
+
+        /* Professional Loading States */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+            filter: grayscale(0.3);
+        }
+
+        /* High Contrast & Accessibility */
+        @media (prefers-contrast: high) {
+            :root {
+                --text-primary: #ffffff;
+                --text-secondary: #f0f0f0;
+                --text-muted: #e0e0e0;
+                --border-color: #555555;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Professional Card Styling */
+        .card {
+            background: var(--dark-card) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 16px !important;
+            box-shadow: var(--shadow-lg) !important;
+        }
+
+        .card:hover {
+            border-color: var(--border-hover) !important;
+            box-shadow: var(--shadow-xl) !important;
+        }
+    </style>
+    
+    <!-- Custom Styles -->
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='modern-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='animations.css') }}"> -->
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-id-card me-2"></i>
+                DL Verification
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if session.user_id %}
+                        <!-- Logged in user items -->
+                        {% if session.role == 'admin' %}
+                            <!-- Admin specific navigation -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+                                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-cog me-1"></i>Admin Tools
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ url_for('verification') }}">
+                                        <i class="fas fa-camera me-2"></i>Verification Center
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('license') }}">
+                                        <i class="fas fa-plus-circle me-2"></i>Add License
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('admin_users') }}">
+                                        <i class="fas fa-users me-2"></i>Manage Users
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('admin_licenses') }}">
+                                        <i class="fas fa-id-card me-2"></i>Manage Licenses
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('admin_verification_history') }}">
+                                        <i class="fas fa-chart-line me-2"></i>Verification History
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('analytics') }}">
+                                        <i class="fas fa-chart-bar me-2"></i>Analytics
+                                    </a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <!-- Regular user navigation -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('user_dashboard') }}">
+                                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('verification') }}">
+                                    <i class="fas fa-search me-1"></i>Verify License
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('user_verification_history') }}">
+                                    <i class="fas fa-history me-1"></i>History
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('office_directory') }}">
+                                    <i class="fas fa-building me-1"></i>RTO Offices
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('complaint') }}">
+                                    <i class="fas fa-exclamation-triangle me-1"></i>File Complaint
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        <!-- User account dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1"></i>
+                                {{ session.user_name or 'User' }}
+                                {% if session.role == 'admin' %}
+                                    <span class="badge bg-warning text-dark ms-1">Admin</span>
+                                {% endif %}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><h6 class="dropdown-header">
+                                    <i class="fas fa-info-circle me-2"></i>Account Info
+                                </h6></li>
+                                <li><span class="dropdown-item-text">
+                                    <small>{{ session.user_email }}</small>
+                                </span></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">
+                                    <i class="fas fa-user-edit me-2"></i>Profile Settings
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <!-- Not logged in - show public pages -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('index') }}">
+                                <i class="fas fa-home me-1"></i>Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('verification') }}">
+                                <i class="fas fa-search me-1"></i>Quick Verify
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login_page') }}">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-light ms-2" href="{{ url_for('register_page') }}">
+                                <i class="fas fa-user-plus me-1"></i>Register
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mt-5 pt-4">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                        {% if category == 'error' %}
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                        {% elif category == 'success' %}
+                            <i class="fas fa-check-circle me-2"></i>
+                        {% elif category == 'info' %}
+                            <i class="fas fa-info-circle me-2"></i>
+                        {% elif category == 'warning' %}
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                        {% endif %}
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">
+                        <i class="fas fa-id-card me-2"></i>
+                        DL Verification System
+                    </h5>
+                    <p>
+                        A secure and reliable platform for real-time driving license verification using advanced face recognition technology.
+                    </p>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('index') }}" class="hover-link">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a></li>
+                        {% if session.user_id %}
+                            {% if session.role == 'admin' %}
+                                <li><a href="{{ url_for('admin_dashboard') }}" class="hover-link">
+                                    <i class="fas fa-tachometer-alt me-1"></i>Admin Dashboard
+                                </a></li>
+                                <li><a href="{{ url_for('analytics') }}" class="hover-link">
+                                    <i class="fas fa-chart-bar me-1"></i>Analytics
+                                </a></li>
+                            {% else %}
+                                <li><a href="{{ url_for('verification') }}" class="hover-link">
+                                    <i class="fas fa-search me-1"></i>Verify License
+                                </a></li>
+                                <li><a href="{{ url_for('office_directory') }}" class="hover-link">
+                                    <i class="fas fa-building me-1"></i>RTO Offices
+                                </a></li>
+                                <li><a href="{{ url_for('complaint') }}" class="hover-link">
+                                    <i class="fas fa-exclamation-triangle me-1"></i>File Complaint
+                                </a></li>
+                            {% endif %}
+                        {% else %}
+                            <li><a href="{{ url_for('verification') }}" class="hover-link">
+                                <i class="fas fa-search me-1"></i>Quick Verify
+                            </a></li>
+                            <li><a href="{{ url_for('login_page') }}" class="hover-link">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">Contact Info</h5>
+                    <p>
+                        <i class="fas fa-envelope me-2"></i>
+                        support@dlverification.com
+                    </p>
+                    <p>
+                        <i class="fas fa-phone me-2"></i>
+                        +1 (555) 123-4567
+                    </p>
+                    {% if session.user_id and session.role == 'admin' %}
+                        <p class="text-warning">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            Admin Panel Access
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2025 Driving License Verification System. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Enhanced Custom JavaScript -->
+    <script>
+        // Auto-hide flash messages after 5 seconds with fade effect
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+        
+        // Enhanced navigation interactions
+        $('.navbar-nav .nav-link').on('mouseenter', function() {
+            $(this).css('transform', 'translateY(-1px)');
+        }).on('mouseleave', function() {
+            $(this).css('transform', 'translateY(0)');
+        });
+
+        // Smooth scrolling for anchor links
+        $('a[href^="#"]').on('click', function(event) {
+            var target = $(this.getAttribute('href'));
+            if( target.length ) {
+                event.preventDefault();
+                $('html, body').stop().animate({
+                    scrollTop: target.offset().top - 100
+                }, 1000);
+            }
+        });
+
+        // Loading state for forms
+        $('form').on('submit', function() {
+            $(this).addClass('loading');
+            $(this).find('button[type="submit"]').prop('disabled', true);
+        });
+
+        // Navbar scroll effect
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 50) {
+                $('.navbar').css('background', 'rgba(22, 27, 34, 0.95)');
+            } else {
+                $('.navbar').css('background', 'var(--dark-secondary)');
+            }
+        });
+
+        // Enhanced accessibility
+        $(document).keydown(function(e) {
+            // ESC key closes dropdowns
+            if (e.keyCode === 27) {
+                $('.dropdown-menu').removeClass('show');
+            }
+        });
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

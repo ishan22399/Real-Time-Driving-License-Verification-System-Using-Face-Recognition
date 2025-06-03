@@ -1,53 +1,870 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Driver's License Information Form</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <style>
-        /* Global styles for the body */
-/* Global styles for the body */
-/* Set the background image for the entire page */
-.background-image {
-     /* Replace 'your-image.jpg' with the path to your image */
-    background-size: cover; /* Cover the entire viewport */
-    background-position: center; /* Center the background image */
-    background-repeat: no-repeat; /* Prevent repeating the background image */
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
+{% extends "base.html" %}
 
-/* Navbar styles */
-.navbar {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px;
-    text-align: right;
-}
+{% block title %}Register License - Driving License Verification System{% endblock %}
 
-.navbar ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
+{% block extra_head %}
+<style>
+    :root {
+        --dark-bg: #0d1117;
+        --dark-secondary: #161b22;
+        --dark-tertiary: #21262d;
+        --dark-quaternary: #30363d;
+        --accent-blue: #58a6ff;
+        --accent-purple: #bc8cff;
+        --accent-green: #3fb950;
+        --text-primary: #f0f6fc;
+        --text-secondary: #8b949e;
+        --text-muted: #6e7681;
+        --border-color: #30363d;
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --success-color: #238636;
+        --danger-color: #da3633;
+        --warning-color: #f85149;
+    }
 
-.navbar li {
-    display: inline;
-    margin-left: 20px;
-}
+    body {
+        background: var(--dark-bg);
+        color: var(--text-primary);
+    }
 
-.navbar a {
-    text-decoration: none;
-    color: #fff;
-    font-weight: bold;
-}
+    .form-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .form-section {
+        background: var(--dark-secondary);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--border-color);
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .form-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+        border-radius: 16px 16px 0 0;
+    }
+
+    .form-section:hover {
+        border-color: var(--accent-blue);
+        box-shadow: 0 8px 25px rgba(88, 166, 255, 0.15);
+    }
+    
+    .section-title {
+        color: var(--text-primary);
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .section-title i {
+        color: var(--accent-blue);
+        font-size: 1.2rem;
+    }
+
+    .form-label {
+        color: var(--text-primary);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .required-field::after {
+        content: " *";
+        color: var(--danger-color);
+        font-weight: bold;
+    }
+
+    .form-control,
+    .form-select {
+        background: var(--dark-tertiary);
+        border: 2px solid var(--border-color);
+        color: var(--text-primary);
+        border-radius: 12px;
+        padding: 12px 16px;
+        transition: all 0.3s ease;
+        font-size: 14px;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        background: var(--dark-quaternary);
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+        color: var(--text-primary);
+    }
+
+    .form-control::placeholder {
+        color: var(--text-muted);
+    }
+
+    .file-upload-container {
+        border: 2px dashed var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        background: var(--dark-tertiary);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .file-upload-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(88, 166, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .file-upload-container:hover {
+        border-color: var(--accent-blue);
+        background: var(--dark-quaternary);
+        transform: translateY(-2px);
+    }
+
+    .file-upload-container:hover::before {
+        left: 100%;
+    }
+
+    .upload-icon {
+        color: var(--accent-blue);
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+        transition: all 0.3s ease;
+    }
+
+    .file-upload-container:hover .upload-icon {
+        transform: scale(1.1);
+        color: var(--accent-purple);
+    }
+
+    .checkbox-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        background: var(--dark-tertiary);
+        cursor: pointer;
+        position: relative;
+    }
+
+    .checkbox-item:hover {
+        border-color: var(--accent-blue);
+        background: var(--dark-quaternary);
+        transform: translateY(-2px);
+    }
+
+    .checkbox-item input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        margin-right: 12px;
+        accent-color: var(--accent-blue);
+        cursor: pointer;
+    }
+
+    .checkbox-item label {
+        margin: 0;
+        cursor: pointer;
+        flex: 1;
+        color: var(--text-secondary);
+        transition: color 0.3s ease;
+    }
+
+    .checkbox-item input[type="checkbox"]:checked + label {
+        color: var(--accent-blue);
+        font-weight: 600;
+    }
+
+    .checkbox-item input[type="checkbox"]:checked {
+        background: var(--accent-blue);
+    }
+
+    .preview-image {
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 12px;
+        border: 2px solid var(--border-color);
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .preview-image:hover {
+        transform: scale(1.05);
+        border-color: var(--accent-blue);
+    }
+
+    .btn-gradient {
+        background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+        border: none;
+        border-radius: 12px;
+        padding: 14px 32px;
+        font-weight: 700;
+        color: white;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-gradient::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn-gradient:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(88, 166, 255, 0.3);
+    }
+
+    .btn-gradient:hover::before {
+        left: 100%;
+    }
+
+    .btn-outline-dark {
+        background: transparent;
+        border: 2px solid var(--border-color);
+        color: var(--text-secondary);
+        border-radius: 12px;
+        padding: 12px 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-dark:hover {
+        background: var(--dark-tertiary);
+        border-color: var(--accent-blue);
+        color: var(--accent-blue);
+        transform: translateY(-2px);
+    }
+
+    .progress-container {
+        background: var(--dark-tertiary);
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+    }
+
+    .progress-bar {
+        height: 6px;
+        background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+        transition: width 0.3s ease;
+        border-radius: 8px;
+    }
+
+    .invalid-feedback {
+        color: var(--danger-color);
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    .valid-feedback {
+        color: var(--success-color);
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .form-control.is-valid {
+        border-color: var(--success-color);
+    }
+
+    .form-control.is-invalid {
+        border-color: var(--danger-color);
+    }
+
+    .hero-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+    }
+
+    .hero-header h1 {
+        background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+    }
+
+    .spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid transparent;
+        border-top: 2px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .floating-label {
+        position: relative;
+    }
+
+    .floating-label input:focus + label,
+    .floating-label input:not(:placeholder-shown) + label {
+        transform: translateY(-1.5rem) scale(0.875);
+        color: var(--accent-blue);
+    }
+
+    @media (max-width: 768px) {
+        .form-container {
+            padding: 1rem;
+        }
+        
+        .form-section {
+            padding: 1.5rem;
+        }
+        
+        .checkbox-group {
+            grid-template-columns: 1fr;
+        }
+        
+        .hero-header h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="py-5" style="margin-top: 80px;">
+    <div class="container form-container">
+        <!-- Hero Header -->
+        <div class="hero-header">
+            <h1>
+                <i class="fas fa-id-card me-3"></i>
+                Register Driving License
+            </h1>
+            <p class="lead" style="color: var(--text-secondary);">
+                Complete the form below to register your driving license in our secure system
+            </p>
+            
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-bar" id="formProgress" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <form action="{{ url_for('submit') }}" method="POST" enctype="multipart/form-data" id="licenseForm" class="needs-validation" novalidate>
+            
+            <!-- Personal Information Section -->
+            <div class="form-section" data-section="personal">
+                <h3 class="section-title">
+                    <i class="fas fa-user"></i>
+                    Personal Information
+                </h3>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="name" class="form-label required-field">Full Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter your full name" required maxlength="50">
+                        <div class="invalid-feedback">Please provide your full name.</div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="gender" class="form-label required-field">Gender</label>
+                        <select class="form-select" id="gender" name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your gender.</div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="dob" class="form-label required-field">Date of Birth</label>
+                        <input type="date" class="form-control" id="dob" name="dob" required>
+                        <div class="invalid-feedback">Please provide your date of birth.</div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="country" class="form-label required-field">Country</label>
+                        <input type="text" class="form-control" id="country" name="country" value="INDIA" readonly>
+                        <div class="invalid-feedback">Please select your country.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Address Information Section -->
+            <div class="form-section" data-section="address">
+                <h3 class="section-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Address Information
+                </h3>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="state" class="form-label required-field">State</label>
+                        <select class="form-select" id="state" name="state" required>
+                            <option value="">Select State</option>
+                            <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                            <option value="Assam">Assam</option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chandigarh">Chandigarh</option>
+                            <option value="Chhattisgarh">Chhattisgarh</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                            <option value="West Bengal">West Bengal</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your state.</div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="city" class="form-label required-field">City</label>
+                        <input type="text" class="form-control" id="city" name="city" placeholder="Enter your city" required>
+                        <div class="invalid-feedback">Please provide your city.</div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-8 mb-3">
+                        <label for="address_line" class="form-label required-field">Address Line</label>
+                        <textarea class="form-control" id="address_line" name="address_line" rows="2" placeholder="Enter your complete address" required></textarea>
+                        <div class="invalid-feedback">Please provide your address.</div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <label for="pincode" class="form-label required-field">PIN Code</label>
+                        <input type="text" class="form-control" id="pincode" name="pincode" placeholder="6-digit PIN" pattern="[0-9]{6}" maxlength="6" required>
+                        <div class="invalid-feedback">Please provide a valid 6-digit PIN code.</div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="landmark" class="form-label">Landmark</label>
+                    <input type="text" class="form-control" id="landmark" name="landmark" placeholder="Nearby landmark (optional)">
+                </div>
+            </div>
+
+            <!-- License Information Section -->
+            <div class="form-section" data-section="license">
+                <h3 class="section-title">
+                    <i class="fas fa-id-badge"></i>
+                    License Information
+                </h3>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="dl_number" class="form-label required-field">Driving License Number</label>
+                        <input type="text" class="form-control" id="dl_number" name="dl_number" placeholder="e.g., MH1220110012345" maxlength="16" required>
+                        <div class="invalid-feedback">Please provide your license number.</div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="doi" class="form-label required-field">Date of Issue</label>
+                        <input type="date" class="form-control" id="doi" name="doi" required>
+                        <div class="invalid-feedback">Please provide the issue date.</div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="issuing_authority" class="form-label required-field">Issuing Authority</label>
+                        <input type="text" class="form-control" id="issuing_authority" name="issuing_authority" placeholder="e.g., MH12" maxlength="10" required>
+                        <div class="invalid-feedback">Please provide the issuing authority.</div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="vt" class="form-label required-field">Valid Till</label>
+                        <input type="date" class="form-control" id="vt" name="vt" required>
+                        <div class="invalid-feedback">Please provide validity date.</div>
+                    </div>
+                </div>
+                
+                <!-- Class of Vehicle (COV) -->
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-car me-2"></i>
+                        Authorized Class of Vehicles (COV)
+                    </label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" class="form-check-input" id="cov1" name="cov[]" value="MCWG">
+                            <label class="form-check-label" for="cov1">MCWG - Motorcycle without Gear</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" class="form-check-input" id="cov2" name="cov[]" value="MCG">
+                            <label class="form-check-label" for="cov2">MCG - Motorcycle with Gear</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" class="form-check-input" id="cov3" name="cov[]" value="LMV">
+                            <label class="form-check-label" for="cov3">LMV - Light Motor Vehicle</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" class="form-check-input" id="cov4" name="cov[]" value="HMV">
+                            <label class="form-check-label" for="cov4">HMV - Heavy Motor Vehicle</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" class="form-check-input" id="cov5" name="cov[]" value="TRANS">
+                            <label class="form-check-label" for="cov5">TRANS - Transport Vehicle</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" class="form-check-input" id="cov6" name="cov[]" value="HAZMAT">
+                            <label class="form-check-label" for="cov6">HAZMAT - Hazardous Material</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Document Upload Section -->
+            <div class="form-section" data-section="documents">
+                <h3 class="section-title">
+                    <i class="fas fa-upload"></i>
+                    Document Upload
+                </h3>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label for="image" class="form-label required-field">Photo of License Holder</label>
+                        <div class="file-upload-container" onclick="document.getElementById('image').click()">
+                            <input type="file" id="image" name="image" accept="image/*" style="display: none;" required>
+                            <i class="fas fa-user upload-icon"></i>
+                            <h5 class="mt-2" style="color: var(--text-primary);">Upload Your Photo</h5>
+                            <p style="color: var(--text-muted); margin: 0;">Click to browse or drag & drop</p>
+                            <small style="color: var(--text-muted);">Supported: JPG, PNG (Max 5MB)</small>
+                        </div>
+                        <div id="imagePreview" class="text-center" style="display: none;">
+                            <img id="previewImg1" class="preview-image">
+                        </div>
+                        <div class="invalid-feedback">Please upload your photo.</div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                        <label for="license_image" class="form-label required-field">License Document</label>
+                        <div class="file-upload-container" onclick="document.getElementById('license_image').click()">
+                            <input type="file" id="license_image" name="license_image" accept="image/*" style="display: none;" required>
+                            <i class="fas fa-id-card upload-icon"></i>
+                            <h5 class="mt-2" style="color: var(--text-primary);">Upload License</h5>
+                            <p style="color: var(--text-muted); margin: 0;">Click to browse or drag & drop</p>
+                            <small style="color: var(--text-muted);">Supported: JPG, PNG (Max 5MB)</small>
+                        </div>
+                        <div id="licensePreview" class="text-center" style="display: none;">
+                            <img id="previewImg2" class="preview-image">
+                        </div>
+                        <div class="invalid-feedback">Please upload your license document.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Section -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-gradient btn-lg me-3" id="submitBtn">
+                    <i class="fas fa-save me-2"></i>
+                    Register License
+                </button>
+                <button type="reset" class="btn btn-outline-dark btn-lg">
+                    <i class="fas fa-undo me-2"></i>
+                    Reset Form
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Image preview functionality
+    function setupImagePreview(inputId, previewContainerId, previewImgId) {
+        document.getElementById(inputId).addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById(previewImgId).src = e.target.result;
+                    document.getElementById(previewContainerId).style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    
+    setupImagePreview('image', 'imagePreview', 'previewImg1');
+    setupImagePreview('license_image', 'licensePreview', 'previewImg2');
+    
+    // Form validation
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            const forms = document.getElementsByClassName('needs-validation');
+            const validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+                        // Show loading state
+                        const submitBtn = document.getElementById('submitBtn');
+                        submitBtn.innerHTML = '<div class="spinner me-2"></div>Submitting...';
+                        submitBtn.disabled = true;
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+    
+    // Auto-fill country based on PIN code (for India)
+    document.getElementById('pincode').addEventListener('input', function() {
+        const pincode = this.value;
+        if (pincode.length === 6 && /^\d{6}$/.test(pincode)) {
+            document.getElementById('country').value = 'India';
+        }
+    });
+    
+    // Date validation
+    document.getElementById('dob').addEventListener('change', function() {
+        const today = new Date();
+        const birthDate = new Date(this.value);
+        const age = today.getFullYear() - birthDate.getFullYear();
+        
+        if (age < 18) {
+            this.setCustomValidity('You must be at least 18 years old');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+    
+    document.getElementById('doi').addEventListener('change', function() {
+        const today = new Date();
+        const issueDate = new Date(this.value);
+        
+        if (issueDate > today) {
+            this.setCustomValidity('Issue date cannot be in the future');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+    
+    // Drag and drop for file uploads
+    function setupDragDrop(containerId, inputId) {
+        const container = document.querySelector(`[onclick="document.getElementById('${inputId}').click()"]`);
+        
+        container.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            container.style.backgroundColor = 'rgba(37, 99, 235, 0.1)';
+        });
+        
+        container.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            container.style.backgroundColor = '';
+        });
+        
+        container.addEventListener('drop', function(e) {
+            e.preventDefault();
+            container.style.backgroundColor = '';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const input = document.getElementById(inputId);
+                input.files = files;
+                
+                // Trigger change event
+                const event = new Event('change', { bubbles: true });
+                input.dispatchEvent(event);
+            }
+        });
+    }
+    
+    setupDragDrop('imageUpload', 'image');
+    setupDragDrop('licenseUpload', 'license_image');
+    
+    // Form progress indicator
+    const formSections = document.querySelectorAll('.form-section');
+    const totalSections = formSections.length;
+    
+    function updateProgress() {
+        let completedSections = 0;
+        
+        formSections.forEach(section => {
+            const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
+            let sectionComplete = true;
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    sectionComplete = false;
+                }
+            });
+            
+            if (sectionComplete) {
+                completedSections++;
+                section.style.borderLeftColor = 'var(--success-color)';
+            } else {
+                section.style.borderLeftColor = 'var(--primary-color)';
+            }
+        });
+        
+        const progress = (completedSections / totalSections) * 100;
+        // You can add a progress bar here if needed
+    }
+    
+    // Listen for input changes to update progress
+    document.addEventListener('input', updateProgress);
+    document.addEventListener('change', updateProgress);
+    
+    // Enhanced form progress tracking
+    function updateFormProgress() {
+        const sections = document.querySelectorAll('.form-section');
+        let totalFields = 0;
+        let completedFields = 0;
+        
+        sections.forEach(section => {
+            const requiredInputs = section.querySelectorAll('input[required], select[required], textarea[required]');
+            totalFields += requiredInputs.length;
+            
+            requiredInputs.forEach(input => {
+                if (input.type === 'file') {
+                    if (input.files && input.files.length > 0) {
+                        completedFields++;
+                    }
+                } else if (input.value.trim() !== '') {
+                    completedFields++;
+                }
+            });
+        });
+        
+        const progress = (completedFields / totalFields) * 100;
+        document.getElementById('formProgress').style.width = progress + '%';
+        
+        // Update section indicators
+        sections.forEach(section => {
+            const sectionInputs = section.querySelectorAll('input[required], select[required], textarea[required]');
+            let sectionComplete = true;
+            
+            sectionInputs.forEach(input => {
+                if (input.type === 'file') {
+                    if (!input.files || input.files.length === 0) {
+                        sectionComplete = false;
+                    }
+                } else if (input.value.trim() === '') {
+                    sectionComplete = false;
+                }
+            });
+            
+            const title = section.querySelector('.section-title i');
+            if (sectionComplete) {
+                title.style.color = 'var(--accent-green)';
+                title.className = title.className.replace(/fa-\w+/, 'fas fa-check-circle');
+            } else {
+                title.style.color = 'var(--accent-blue)';
+            }
+        });
+    }
+    
+    // Real-time validation and styling
+    document.addEventListener('input', function(e) {
+        updateFormProgress();
+        
+        if (e.target.matches('input, select, textarea')) {
+            if (e.target.checkValidity()) {
+                e.target.classList.remove('is-invalid');
+                e.target.classList.add('is-valid');
+            } else {
+                e.target.classList.remove('is-valid');
+                e.target.classList.add('is-invalid');
+            }
+        }
+    });
+    
+    document.addEventListener('change', updateFormProgress);
+    
+    // Auto-uppercase for specific fields
+    document.getElementById('dl_number').addEventListener('input', function() {
+        this.value = this.value.toUpperCase();
+    });
+    
+    document.getElementById('issuing_authority').addEventListener('input', function() {
+        this.value = this.value.toUpperCase();
+    });
+    
+    // Pincode validation
+    document.getElementById('pincode').addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '');
+    });
+    
+    // Enhanced age validation
+    document.getElementById('dob').addEventListener('change', function() {
+        const today = new Date();
+        const birthDate = new Date(this.value);
+        const age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        
+        if (age < 18) {
+            this.setCustomValidity('You must be at least 18 years old to apply for a driving license');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+    
+    // Initialize progress
+    updateFormProgress();
+</script>
+{% endblock %}
 
 /* Header styles */
 header {
@@ -193,35 +1010,19 @@ th {
                             <option value="Bihar">Bihar</option>
                             <option value="Chandigarh">Chandigarh</option>
                             <option value="Chhattisgarh">Chhattisgarh</option>
-                            <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
                             <option value="Delhi">Delhi</option>
                             <option value="Goa">Goa</option>
                             <option value="Gujarat">Gujarat</option>
                             <option value="Haryana">Haryana</option>
-                            <option value="Himachal Pradesh">Himachal Pradesh</option>
-                            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                            <option value="Jharkhand">Jharkhand</option>
                             <option value="Karnataka">Karnataka</option>
                             <option value="Kerala">Kerala</option>
-                            <option value="Ladakh">Ladakh</option>
-                            <option value="Lakshadweep">Lakshadweep</option>
-                            <option value="Madhya Pradesh">Madhya Pradesh</option>
                             <option value="Maharashtra">Maharashtra</option>
-                            <option value="Manipur">Manipur</option>
-                            <option value="Meghalaya">Meghalaya</option>
-                            <option value="Mizoram">Mizoram</option>
-                            <option value="Nagaland">Nagaland</option>
-                            <option value="Odisha">Odisha</option>
-                            <option value="Puducherry">Puducherry</option>
                             <option value="Punjab">Punjab</option>
                             <option value="Rajasthan">Rajasthan</option>
-                            <option value="Sikkim">Sikkim</option>
                             <option value="Tamil Nadu">Tamil Nadu</option>
                             <option value="Telangana">Telangana</option>
-                            <option value="Tripura">Tripura</option>
                             <option value="Uttar Pradesh">Uttar Pradesh</option>
-                            <option value="Uttarakhand">Uttarakhand</option>
-                            <option value="West Bengal">West Bengal</option>   
+                            <option value="West Bengal">West Bengal</option>
                         </select>
                     </div>
                     

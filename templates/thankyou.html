@@ -1,64 +1,563 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Thank You!</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-      margin: 0;
-      padding: 0;
-    }
+{% extends "base.html" %}
 
-    h1 {
-      text-align: center;
-      padding: 20px;
-      background-color: #6e1717;
-      color: #fff;
-      font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-      font-size: 45px;
-    }
+{% block title %}Thank You - Real-Time License Verification System{% endblock %}
 
-    .message-container {
-      background-color: #fff;
-      max-width: 400px;
-      margin: 20px auto;
-      padding: 20px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
+{% block content %}
+<div class="thankyou-container">
+    <div class="thankyou-content">
+        <!-- Success Animation -->
+        <div class="success-animation">
+            <div class="checkmark-circle">
+                <div class="checkmark"></div>
+            </div>
+        </div>
 
-    a {
-      text-decoration: none;
-      color: #09bce9;
-      font-weight: bold;
-      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    }
+        <!-- Thank You Message -->
+        <div class="thankyou-message">
+            <h1 class="thankyou-title">Thank You!</h1>
+            <p class="thankyou-subtitle">Your submission has been processed successfully</p>
+            
+            <div class="success-details">
+                <div class="detail-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Data successfully submitted</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Verification process initiated</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>Confirmation email sent</span>
+                </div>
+            </div>
+        </div>
 
-    a:hover {
-      text-decoration: underline;
-    }
+        <!-- Action Buttons -->
+        <div class="thankyou-actions">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                <i class="fas fa-home"></i>
+                Return to Homepage
+            </a>
+            <a href="{{ url_for('verification') }}" class="btn btn-outline-primary">
+                <i class="fas fa-camera"></i>
+                Start Verification
+            </a>
+        </div>
 
-    @media (max-width: 768px) {
-      .message-container {
-        width: 100%;
-      }
-    }
+        <!-- Additional Information -->
+        <div class="additional-info">
+            <div class="info-card">
+                <h3>What's Next?</h3>
+                <ul>
+                    <li>Your application is being reviewed by our system</li>
+                    <li>You'll receive an email confirmation within 5 minutes</li>
+                    <li>Processing typically takes 24-48 hours</li>
+                    <li>You can track your application status in your dashboard</li>
+                </ul>
+            </div>
 
-    p {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-size: 20px;
+            <div class="contact-card">
+                <h3>Need Help?</h3>
+                <p>If you have any questions or concerns, please don't hesitate to contact our support team.</p>
+                <div class="contact-methods">
+                    <a href="mailto:support@verification.gov" class="contact-method">
+                        <i class="fas fa-envelope"></i>
+                        <span>support@verification.gov</span>
+                    </a>
+                    <a href="tel:+1234567890" class="contact-method">
+                        <i class="fas fa-phone"></i>
+                        <span>+1 (234) 567-890</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reference Information -->
+        <div class="reference-info">
+            <div class="reference-item">
+                <span class="reference-label">Reference ID:</span>
+                <span class="reference-value" id="referenceId">TXN-{{ timestamp or '2024' }}-{{ random_id or '001234' }}</span>
+                <button class="copy-btn" onclick="copyReference()" title="Copy Reference ID">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </div>
+            <div class="reference-item">
+                <span class="reference-label">Submission Time:</span>
+                <span class="reference-value" id="submissionTime">{{ current_time or 'Today at 12:00 PM' }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.thankyou-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--white) 50%, var(--secondary-light) 100%);
+    padding: 2rem 1rem;
+}
+
+.thankyou-content {
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    animation: slideUp 0.8s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
     }
-  </style>
-</head>
-<body>
-  <div class="hero-image"></div>
-  <h1>Thank You!</h1>
-  <div class="message-container">
-    <p>Your data has been successfully submitted.</p>
-    <a href="{{ url_for('admin_page') }}">Return to homepage</a>
-  </div>
-</body>
-</html>
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.success-animation {
+    margin-bottom: 2rem;
+}
+
+.checkmark-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--success);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    position: relative;
+    animation: scaleIn 0.6s ease-out 0.3s both;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+.checkmark {
+    width: 40px;
+    height: 20px;
+    border: 4px solid var(--white);
+    border-top: none;
+    border-right: none;
+    transform: rotate(-45deg);
+    animation: checkmarkDraw 0.4s ease-out 0.9s both;
+}
+
+@keyframes checkmarkDraw {
+    from {
+        width: 0;
+        height: 0;
+    }
+    to {
+        width: 40px;
+        height: 20px;
+    }
+}
+
+.thankyou-message {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 2rem;
+    animation: fadeIn 0.8s ease-out 0.6s both;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.thankyou-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.thankyou-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.success-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: var(--success-light);
+    border-radius: var(--border-radius);
+    color: var(--success-dark);
+    font-weight: 500;
+}
+
+.detail-item i {
+    font-size: 1.125rem;
+}
+
+.thankyou-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+    animation: slideUp 0.8s ease-out 1.2s both;
+}
+
+.additional-info {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    animation: fadeIn 0.8s ease-out 1.5s both;
+}
+
+.info-card,
+.contact-card {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    text-align: left;
+}
+
+.info-card h3,
+.contact-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.info-card h3::before {
+    content: '📋';
+    font-size: 1.5rem;
+}
+
+.contact-card h3::before {
+    content: '💬';
+    font-size: 1.5rem;
+}
+
+.info-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.info-card li {
+    padding: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.info-card li::before {
+    content: '✓';
+    color: var(--success);
+    font-weight: bold;
+}
+
+.contact-card p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.contact-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.contact-method {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: var(--bg-light);
+    border-radius: var(--border-radius);
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.contact-method:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+    transform: translateX(5px);
+}
+
+.contact-method i {
+    font-size: 1.125rem;
+    width: 20px;
+    text-align: center;
+}
+
+.reference-info {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    border-left: 4px solid var(--primary);
+    animation: slideUp 0.8s ease-out 1.8s both;
+}
+
+.reference-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.reference-item:last-child {
+    border-bottom: none;
+}
+
+.reference-label {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.reference-value {
+    font-family: 'Courier New', monospace;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.copy-btn {
+    background: none;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .thankyou-container {
+        padding: 1rem;
+    }
+    
+    .thankyou-title {
+        font-size: 2rem;
+    }
+    
+    .thankyou-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .additional-info {
+        grid-template-columns: 1fr;
+    }
+    
+    .contact-methods {
+        gap: 0.5rem;
+    }
+    
+    .reference-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .checkmark-circle {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .checkmark {
+        width: 25px;
+        height: 12px;
+    }
+    
+    .thankyou-message {
+        padding: 1.5rem;
+    }
+    
+    .detail-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Set current time
+    const now = new Date();
+    const timeString = now.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    const timeElement = document.getElementById('submissionTime');
+    if (timeElement && !timeElement.textContent.includes('Today')) {
+        timeElement.textContent = timeString;
+    }
+    
+    // Generate reference ID if not provided
+    const refElement = document.getElementById('referenceId');
+    if (refElement && refElement.textContent.includes('random_id')) {
+        const timestamp = Date.now().toString().slice(-6);
+        const randomId = Math.random().toString(36).substr(2, 6).toUpperCase();
+        refElement.textContent = `TXN-${new Date().getFullYear()}-${timestamp}${randomId}`;
+    }
+    
+    // Add success sound effect (optional)
+    if (window.AudioContext || window.webkitAudioContext) {
+        playSuccessSound();
+    }
+});
+
+function copyReference() {
+    const referenceId = document.getElementById('referenceId').textContent;
+    
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(referenceId).then(() => {
+            showCopySuccess();
+        });
+    } else {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = referenceId;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showCopySuccess();
+    }
+}
+
+function showCopySuccess() {
+    const copyBtn = document.querySelector('.copy-btn');
+    const originalHTML = copyBtn.innerHTML;
+    
+    copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+    copyBtn.style.color = 'var(--success)';
+    
+    setTimeout(() => {
+        copyBtn.innerHTML = originalHTML;
+        copyBtn.style.color = 'var(--primary)';
+    }, 2000);
+    
+    // Show toast notification
+    showToast('Reference ID copied to clipboard!', 'success');
+}
+
+function playSuccessSound() {
+    try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Create a simple success sound
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+        oscillator.frequency.setValueAtTime(1000, audioContext.currentTime + 0.1);
+        oscillator.frequency.setValueAtTime(1200, audioContext.currentTime + 0.2);
+        
+        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.05);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.3);
+    } catch (error) {
+        // Silently fail if audio is not supported
+        console.log('Audio not supported');
+    }
+}
+
+function showToast(message, type = 'info') {
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check' : 'info'}-circle"></i>
+        <span>${message}</span>
+    `;
+    
+    // Add toast styles
+    Object.assign(toast.style, {
+        position: 'fixed',
+        top: '2rem',
+        right: '2rem',
+        background: type === 'success' ? 'var(--success)' : 'var(--info)',
+        color: 'var(--white)',
+        padding: '1rem 1.5rem',
+        borderRadius: 'var(--border-radius)',
+        boxShadow: 'var(--shadow-lg)',
+        zIndex: '9999',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.5rem',
+        transform: 'translateX(100%)',
+        transition: 'transform 0.3s ease'
+    });
+    
+    document.body.appendChild(toast);
+    
+    // Animate in
+    setTimeout(() => {
+        toast.style.transform = 'translateX(0)';
+    }, 10);
+    
+    // Animate out and remove
+    setTimeout(() => {
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            document.body.removeChild(toast);
+        }, 300);
+    }, 3000);
+}
+</script>
+
+{% endblock %}

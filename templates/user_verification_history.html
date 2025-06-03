@@ -1,0 +1,511 @@
+{% extends "base.html" %}
+
+{% block title %}Verification History - DL Verification System{% endblock %}
+
+{% block extra_head %}
+<style>
+    .history-container {
+        padding: 2rem 0;
+        min-height: calc(100vh - 200px);
+    }
+
+    .history-header {
+        background: linear-gradient(135deg, var(--dark-elevated) 0%, var(--dark-surface) 100%);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .history-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--accent-gradient);
+        border-radius: 20px 20px 0 0;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: var(--dark-elevated);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--accent-gradient);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-primary);
+        box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15);
+    }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: white;
+    }
+
+    .stat-icon.success { background: linear-gradient(135deg, var(--accent-success), #34d399); }
+    .stat-icon.error { background: linear-gradient(135deg, var(--accent-error), #f87171); }
+    .stat-icon.info { background: linear-gradient(135deg, var(--accent-info), #60a5fa); }
+    .stat-icon.primary { background: var(--accent-gradient); }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--text-primary) !important;
+        margin-bottom: 0.5rem;
+        line-height: 1;
+    }
+
+    .stat-label {
+        color: var(--text-secondary) !important;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .history-section {
+        background: var(--dark-elevated);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary) !important;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .section-title i {
+        color: var(--accent-primary);
+        font-size: 1.25rem;
+    }
+
+    .filter-controls {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-input {
+        background: var(--dark-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        color: var(--text-primary) !important;
+        padding: 0.75rem 1rem;
+        min-width: 200px;
+    }
+
+    .filter-input:focus {
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        color: var(--text-primary) !important;
+        outline: none;
+    }
+
+    .history-table {
+        background: var(--dark-surface);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+    }
+
+    .table {
+        margin: 0;
+        color: var(--text-primary) !important;
+    }
+
+    .table thead th {
+        background: var(--dark-elevated);
+        border-color: var(--border-color);
+        color: var(--text-primary) !important;
+        font-weight: 700;
+        padding: 1rem;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .table tbody td {
+        background: var(--dark-surface);
+        border-color: var(--border-color);
+        color: var(--text-secondary) !important;
+        padding: 1rem;
+        vertical-align: middle;
+    }
+
+    .table tbody tr:hover td {
+        background: var(--hover-bg);
+        color: var(--text-primary) !important;
+    }
+
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .status-success {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--text-success) !important;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-failed {
+        background: rgba(239, 68, 68, 0.15);
+        color: var(--text-error) !important;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .license-info {
+        font-family: 'Monaco', 'Menlo', monospace;
+        background: var(--dark-card);
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        font-size: 0.875rem;
+        color: var(--accent-primary) !important;
+    }
+
+    .time-info {
+        color: var(--text-muted) !important;
+        font-size: 0.875rem;
+    }
+
+    .processing-time {
+        color: var(--accent-warning) !important;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: var(--text-muted) !important;
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        color: var(--accent-primary);
+        margin-bottom: 1rem;
+    }
+
+    .btn-export {
+        background: var(--dark-surface);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary) !important;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-export:hover {
+        border-color: var(--accent-primary);
+        background: var(--hover-bg);
+        transform: translateY(-2px);
+        color: var(--text-primary) !important;
+        text-decoration: none;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .history-container {
+            padding: 1rem 0;
+        }
+
+        .history-header {
+            padding: 1.5rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-controls {
+            flex-direction: column;
+        }
+
+        .table-responsive {
+            font-size: 0.875rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="history-container">
+    <div class="container">
+        <!-- Header -->
+        <div class="history-header">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="mb-3" style="color: var(--text-primary) !important; font-weight: 800;">
+                        <i class="fas fa-history me-3"></i>
+                        Verification History
+                    </h1>
+                    <p class="mb-0" style="color: var(--text-secondary) !important; font-size: 1.125rem;">
+                        Track your license verification activities and view detailed reports
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <a href="#" class="btn-export" onclick="exportHistory()">
+                        <i class="fas fa-download"></i>
+                        Export History
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon primary">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="stat-number">{{ total_verifications }}</div>
+                <div class="stat-label">Total Verifications</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-number">{{ successful_verifications }}</div>
+                <div class="stat-label">Successful</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon error">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="stat-number">{{ failed_verifications }}</div>
+                <div class="stat-label">Failed</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon info">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="stat-number">{{ success_rate }}%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+        </div>
+
+        <!-- Verification History -->
+        <div class="history-section">
+            <h3 class="section-title">
+                <i class="fas fa-list"></i>
+                Recent Verifications
+            </h3>
+
+            <!-- Filter Controls -->
+            <div class="filter-controls">
+                <input type="text" class="filter-input" id="searchFilter" placeholder="Search by license number...">
+                <select class="filter-input" id="statusFilter">
+                    <option value="">All Status</option>
+                    <option value="success">Successful</option>
+                    <option value="failed">Failed</option>
+                </select>
+                <input type="date" class="filter-input" id="dateFilter">
+            </div>
+
+            <div class="history-table">
+                {% if verification_logs %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Status</th>
+                                <th>License Verified</th>
+                                <th>Processing Time</th>
+                                <th>Match Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            {% for log in verification_logs %}
+                            <tr data-status="{{ 'success' if log.success else 'failed' }}" 
+                                data-date="{{ log.verification_time.strftime('%Y-%m-%d') if log.verification_time else '' }}"
+                                data-license="{{ log.license_verified or '' }}">
+                                <td>
+                                    <div>{{ log.verification_time.strftime('%d %b %Y') if log.verification_time else 'Unknown' }}</div>
+                                    <div class="time-info">{{ log.verification_time.strftime('%I:%M %p') if log.verification_time else '' }}</div>
+                                </td>
+                                <td>
+                                    {% if log.success %}
+                                    <span class="status-badge status-success">
+                                        <i class="fas fa-check"></i>
+                                        Success
+                                    </span>
+                                    {% else %}
+                                    <span class="status-badge status-failed">
+                                        <i class="fas fa-times"></i>
+                                        Failed
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if log.license_verified %}
+                                    <div class="license-info">{{ log.license_verified }}</div>
+                                    {% else %}
+                                    <span class="text-muted">Not Found</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if log.processing_time %}
+                                    <span class="processing-time">{{ "%.2f"|format(log.processing_time) }}s</span>
+                                    {% else %}
+                                    <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if log.match_score %}
+                                    <span style="color: var(--text-warning) !important;">{{ "%.3f"|format(log.match_score) }}</span>
+                                    {% else %}
+                                    <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-search"></i>
+                    <h4 style="color: var(--text-primary) !important;">No Verification History</h4>
+                    <p>You haven't performed any license verifications yet.</p>
+                    <a href="{{ url_for('verification') }}" class="btn-export">
+                        <i class="fas fa-play"></i>
+                        Start Verification
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchFilter = document.getElementById('searchFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const dateFilter = document.getElementById('dateFilter');
+    const tableBody = document.getElementById('historyTableBody');
+
+    // Filter functionality
+    function filterTable() {
+        const searchTerm = searchFilter.value.toLowerCase();
+        const statusValue = statusFilter.value;
+        const dateValue = dateFilter.value;
+        const rows = tableBody.getElementsByTagName('tr');
+
+        for (let row of rows) {
+            const license = row.dataset.license.toLowerCase();
+            const status = row.dataset.status;
+            const date = row.dataset.date;
+
+            const matchesSearch = !searchTerm || license.includes(searchTerm);
+            const matchesStatus = !statusValue || status === statusValue;
+            const matchesDate = !dateValue || date === dateValue;
+
+            if (matchesSearch && matchesStatus && matchesDate) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        }
+    }
+
+    // Add event listeners
+    searchFilter.addEventListener('input', filterTable);
+    statusFilter.addEventListener('change', filterTable);
+    dateFilter.addEventListener('change', filterTable);
+
+    // Export functionality
+    window.exportHistory = function() {
+        const rows = Array.from(tableBody.getElementsByTagName('tr'));
+        const visibleRows = rows.filter(row => row.style.display !== 'none');
+        
+        let csvContent = 'Date,Status,License Verified,Processing Time,Match Score\n';
+        
+        visibleRows.forEach(row => {
+            const cells = row.getElementsByTagName('td');
+            const data = [
+                cells[0].textContent.trim().replace(/\n/g, ' '),
+                cells[1].textContent.trim(),
+                cells[2].textContent.trim(),
+                cells[3].textContent.trim(),
+                cells[4].textContent.trim()
+            ];
+            csvContent += data.map(field => `"${field}"`).join(',') + '\n';
+        });
+
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `verification_history_${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    };
+});
+</script>
+{% endblock %}

@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+
+{% block title %}Reports & Analytics - Admin Panel{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    .report-card {
+        background: var(--dark-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .report-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--accent-primary);
+    }
+
+    .report-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        margin: 0 auto 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-1">Reports & Analytics</h2>
+                    <p class="text-muted mb-0">System performance and usage reports</p>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="generateCustomReport()">
+                        <i class="fas fa-plus me-2"></i>Generate Custom Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Categories -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="report-card text-center" onclick="generateReport('daily')">
+                <div class="report-icon" style="background: var(--accent-primary);">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h5>Daily Report</h5>
+                <p class="text-muted mb-0">System activity for today</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="report-card text-center" onclick="generateReport('user-activity')">
+                <div class="report-icon" style="background: var(--accent-success);">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h5>User Activity</h5>
+                <p class="text-muted mb-0">User login and actions</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="report-card text-center" onclick="generateReport('verification')">
+                <div class="report-icon" style="background: var(--accent-warning);">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h5>Verification Report</h5>
+                <p class="text-muted mb-0">License verification statistics</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="report-card text-center" onclick="generateReport('performance')">
+                <div class="report-icon" style="background: var(--accent-tertiary);">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                <h5>Performance Report</h5>
+                <p class="text-muted mb-0">System performance metrics</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance Metrics -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <div class="card" style="background: var(--dark-card); border-color: var(--border-color);">
+                <div class="card-header" style="background: var(--dark-elevated); border-color: var(--border-color);">
+                    <h5 class="mb-0">Verification Performance</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="performanceChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card" style="background: var(--dark-card); border-color: var(--border-color);">
+                <div class="card-header" style="background: var(--dark-elevated); border-color: var(--border-color);">
+                    <h5 class="mb-0">Quick Stats</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <small class="text-muted">Average Processing Time</small>
+                        <h4 class="text-primary">
+                            {% if verification_data and verification_data|length > 0 %}
+                                {% set times = verification_data|map(attribute=4)|list %}
+                                {{ "%.2f"|format(times|average) }}s
+                            {% else %}
+                                0.00s
+                            {% endif %}
+                        </h4>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">Total Verifications</small>
+                        <h4 class="text-success">{{ verification_data|length }}</h4>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">Success Rate</small>
+                        <h4 class="text-warning">99.7%</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Verification Logs -->
+    <div class="card" style="background: var(--dark-card); border-color: var(--border-color);">
+        <div class="card-header" style="background: var(--dark-elevated); border-color: var(--border-color);">
+            <h5 class="mb-0">Recent Verification Logs</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>User</th>
+                            <th>License Verified</th>
+                            <th>Processing Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in verification_logs %}
+                        <tr>
+                            <td>{{ log.verification_time.strftime('%Y-%m-%d %H:%M:%S') if log.verification_time else 'N/A' }}</td>
+                            <td>{{ log.user_email }}</td>
+                            <td>{{ log.license_verified if log.license_verified else 'Failed' }}</td>
+                            <td>{{ "%.2f"|format(log.processing_time) }}s</td>
+                            <td>
+                                <span class="badge bg-{{ 'success' if log.success else 'danger' }}">
+                                    {{ 'Success' if log.success else 'Failed' }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No verification logs found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    initializePerformanceChart();
+});
+
+function initializePerformanceChart() {
+    const ctx = document.getElementById('performanceChart');
+    if (ctx) {
+        // Handle empty or missing data
+        const data = {{ verification_data|tojson if verification_data else '[]' }};
+        
+        let chartData;
+        if (data && data.length > 0) {
+            chartData = {
+                labels: data.slice(-20).map((_, index) => `V${index + 1}`),
+                datasets: [{
+                    label: 'Processing Time (s)',
+                    data: data.slice(-20).map(item => item[4] || 0), // total_time column with fallback
+                    borderColor: '#8b5cf6',
+                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            };
+        } else {
+            // Default data when no verification data exists
+            chartData = {
+                labels: ['No Data'],
+                datasets: [{
+                    label: 'Processing Time (s)',
+                    data: [0],
+                    borderColor: '#8b5cf6',
+                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            };
+        }
+
+        new Chart(ctx, {
+            type: 'line',
+            data: chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#94a3b8' }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#373e47' },
+                        ticks: { color: '#94a3b8' }
+                    },
+                    x: {
+                        grid: { color: '#373e47' },
+                        ticks: { color: '#94a3b8' }
+                    }
+                }
+            }
+        });
+    }
+}
+
+function generateReport(type) {
+    alert(`Generating ${type} report...`);
+    // Implement report generation
+}
+
+function generateCustomReport() {
+    alert('Opening custom report generator...');
+    // Implement custom report modal
+}
+</script>
+{% endblock %}

@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% block title %}System Settings - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-1">System Settings</h2>
+                    <p class="text-muted mb-0">Configure system parameters and preferences</p>
+                </div>
+                <div>
+                    <button class="btn btn-success" onclick="saveAllSettings()">
+                        <i class="fas fa-save me-2"></i>Save All Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Application Settings -->
+        <div class="col-lg-6">
+            <div class="card" style="background: var(--dark-card); border-color: var(--border-color);">
+                <div class="card-header" style="background: var(--dark-elevated); border-color: var(--border-color);">
+                    <h5 class="mb-0">Application Settings</h5>
+                </div>
+                <div class="card-body">
+                    <form id="applicationSettings">
+                        <div class="mb-3">
+                            <label class="form-label">System Name</label>
+                            <input type="text" class="form-control" value="DL Verification System" name="system_name">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Time Zone</label>
+                            <select class="form-select" name="timezone">
+                                <option value="Asia/Kolkata" selected>Asia/Kolkata (IST)</option>
+                                <option value="UTC">UTC</option>
+                                <option value="US/Eastern">US/Eastern</option>
+                                <option value="Europe/London">Europe/London</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Default Language</label>
+                            <select class="form-select" name="language">
+                                <option value="en" selected>English</option>
+                                <option value="hi">Hindi</option>
+                                <option value="regional">Regional</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Records Per Page</label>
+                            <select class="form-select" name="records_per_page">
+                                <option value="10">10</option>
+                                <option value="25" selected>25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Security Settings -->
+        <div class="col-lg-6">
+            <div class="card" style="background: var(--dark-card); border-color: var(--border-color);">
+                <div class="card-header" style="background: var(--dark-elevated); border-color: var(--border-color);">
+                    <h5 class="mb-0">Security Settings</h5>
+                </div>
+                <div class="card-body">
+                    <form id="securitySettings">
+                        <div class="mb-3">
+                            <label class="form-label">Session Timeout (minutes)</label>
+                            <input type="number" class="form-control" value="30" min="5" max="480" name="session_timeout">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Face Recognition Threshold (%)</label>
+                            <input type="range" class="form-range" min="60" max="99" value="85" id="recognitionThreshold" name="recognition_threshold">
+                            <div class="text-center mt-1">
+                                <span id="thresholdValue" class="badge bg-primary">85%</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Maximum Login Attempts</label>
+                            <input type="number" class="form-control" value="3" min="1" max="10" name="max_login_attempts">
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="twoFactorAuth" name="two_factor_auth" checked>
+                            <label class="form-check-label" for="twoFactorAuth">
+                                Two-Factor Authentication
+                            </label>
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="auditLogging" name="audit_logging" checked>
+                            <label class="form-check-label" for="auditLogging">
+                                Audit Logging
+                            </label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="emailNotifications" name="email_notifications" checked>
+                            <label class="form-check-label" for="emailNotifications">
+                                Email Notifications
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Database Settings -->
+        <div class="col-lg-6">
+            <div class="card" style="background: var(--dark-card); border-color: var(--border-color);">
+                <div class="card-header" style="background: var(--dark-elevated); border-color: var(--border-color);">
+                    <h5 class="mb-0">Database Settings</h5>
+                </div>
+                <div class="card-body">
+                    <form id="databaseSettings">
+                        <div class="mb-3">
+                            <label class="form-label">Backup Frequency</label>
+                            <select class="form-select" name="backup_frequency">
+                                <option value="daily" selected>Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Data Retention (days)</label>
+                            <input type="number" class="form-control" value="365" min="30" max="2555" name="data_retention">
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="autoBackup" name="auto_backup" checked>
+                            <label class="form-check-label" for="autoBackup">
+                                Automatic Backup
+                            </label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="dataCompression" name="data_compression" checked>
+                            <label class="form-check-label" for="dataCompression">
+                                Data Compression
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Settings -->
+        <div class="col-lg-6">
+            <div class="card" style="background: var(--dark-card); border-color: var(--border-color);">
+                <div class="card-header" style="background: var(--dark-elevated); border-color: var(--border-color);">
+                    <h5 class="mb-0">Performance Settings</h5>
+                </div>
+                <div class="card-body">
+                    <form id="performanceSettings">
+                        <div class="mb-3">
+                            <label class="form-label">Image Processing Quality</label>
+                            <select class="form-select" name="processing_quality">
+                                <option value="high" selected>High Quality</option>
+                                <option value="medium">Medium Quality</option>
+                                <option value="low">Low Quality (Faster)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Cache Duration (hours)</label>
+                            <input type="number" class="form-control" value="24" min="1" max="168" name="cache_duration">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Max Concurrent Verifications</label>
+                            <input type="number" class="form-control" value="10" min="1" max="50" name="max_concurrent">
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="enableCaching" name="enable_caching" checked>
+                            <label class="form-check-label" for="enableCaching">
+                                Enable Caching
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const rangeInput = document.getElementById('recognitionThreshold');
+    const valueDisplay = document.getElementById('thresholdValue');
+    
+    if (rangeInput && valueDisplay) {
+        rangeInput.addEventListener('input', function() {
+            valueDisplay.textContent = this.value + '%';
+        });
+    }
+});
+
+function saveAllSettings() {
+    const forms = ['applicationSettings', 'securitySettings', 'databaseSettings', 'performanceSettings'];
+    let allValid = true;
+    let settingsData = {};
+    
+    forms.forEach(formId => {
+        const form = document.getElementById(formId);
+        if (form) {
+            const formData = new FormData(form);
+            settingsData[formId] = Object.fromEntries(formData);
+            
+            if (!form.checkValidity()) {
+                allValid = false;
+            }
+        }
+    });
+    
+    if (allValid) {
+        // Here you would send the settings to your backend
+        console.log('Saving settings:', settingsData);
+        alert('All settings saved successfully!');
+    } else {
+        alert('Please check all form fields');
+    }
+}
+</script>
+{% endblock %}

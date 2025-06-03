@@ -1,42 +1,1079 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Add Bootstrap CSS for icons and fonts -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-FJj2A7zCyJ8iRkf5Oj5P8F5f5Py4Ck5FO5Kg5f5F5kl5Ck5F5i5F5i5F5j5E5I5F5k5F5P5n5U5K5O5k5p5f5k5F5U5K5O5K5v5E5N5K5U5n5O5I5O5K5I5P5k5P5g5f5k5I5Y5w5B5E5y5d5E5L5E5I5I5f5L5E5I5P5l5M5D5k5k5F5E5V5P5k5D5J5b5T5H5e5E5E5y5X5E5y5V5N5A5K5Y5M5O5G5T5b5P5b5P5b5b5B5p5H5b5g5C5C5C5F5B5X5D5T5X5E5E5J5F5y5Y5j5h5S5S5N5D5n5B5S5M5d5n5B5z5d5D5L5h5J5N5d5B5t5H5E5E5E5k5e5B5G5T5D5z5M5h5N5h5P5f5F5y5H5y5M5M5z5T5H5E5z5B5A5L5L5D5n5P5R5T5Z5w5C5O5M5D5N5D5l5G5G5G5i5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A=" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles.css">
-    <title>Vehicle Stolen Complaint</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}File Complaint - DL Verification System{% endblock %}
+
+{% block extra_head %}
+<style>
+    .complaint-container {
+        padding: 2rem 0;
+        min-height: calc(100vh - 200px);
+    }
+
+    .complaint-header {
+        background: linear-gradient(135deg, var(--dark-elevated) 0%, var(--dark-surface) 100%);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .complaint-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--accent-gradient);
+        border-radius: 20px 20px 0 0;
+    }
+
+    .header-content {
+        text-align: center;
+    }
+
+    .page-title {
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: var(--text-primary) !important;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .page-title i {
+        color: var(--accent-warning);
+        font-size: 1.875rem;
+    }
+
+    .page-subtitle {
+        color: var(--text-secondary) !important;
+        margin: 0;
+        font-size: 1.125rem;
+        line-height: 1.6;
+    }
+
+    .security-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--text-success) !important;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        margin-top: 1.5rem;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.1);
+    }
+
+    .form-card {
+        background: var(--dark-elevated);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: var(--shadow-lg);
+        margin-bottom: 2rem;
+    }
+
+    .form-section {
+        margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary) !important;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid var(--accent-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .section-title i {
+        color: var(--accent-primary);
+        font-size: 1.25rem;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-grid.two-col {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-label {
+        color: var(--text-primary) !important;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .form-label i {
+        color: var(--accent-primary);
+        width: 16px;
+    }
+
+    .form-label.required::after {
+        content: '*';
+        color: var(--accent-error);
+        margin-left: 0.25rem;
+        font-weight: 700;
+    }
+
+    .form-control, .form-select {
+        background: var(--dark-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        color: var(--text-primary) !important;
+        padding: 0.875rem 1rem;
+        transition: all 0.3s ease;
+        width: 100%;
+        font-size: 1rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        background: var(--dark-surface);
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        color: var(--text-primary) !important;
+        outline: none;
+    }
+
+    .form-control::placeholder {
+        color: var(--text-muted) !important;
+    }
+
+    .upload-section {
+        border: 2px dashed var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        background: var(--glass-bg);
+    }
+
+    .upload-section:hover {
+        border-color: var(--accent-primary);
+        background: var(--hover-bg);
+        transform: translateY(-2px);
+    }
+
+    .upload-section.dragover {
+        border-color: var(--accent-primary);
+        background: var(--hover-bg);
+    }
+
+    .upload-icon {
+        font-size: 2.5rem;
+        color: var(--accent-primary);
+        margin-bottom: 1rem;
+    }
+
+    .upload-text {
+        color: var(--text-primary) !important;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 1.125rem;
+    }
+
+    .upload-hint {
+        color: var(--text-muted) !important;
+        font-size: 0.875rem;
+    }
+
+    .uploaded-files {
+        margin-top: 1rem;
+    }
+
+    .file-item {
+        background: var(--dark-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .file-item:hover {
+        border-color: var(--accent-primary);
+        background: var(--hover-bg);
+    }
+
+    .file-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--text-primary) !important;
+    }
+
+    .file-remove {
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: var(--text-error) !important;
+        padding: 0.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.875rem;
+    }
+
+    .file-remove:hover {
+        background: var(--accent-error);
+        color: white !important;
+        transform: scale(1.05);
+    }
+
+    .priority-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .priority-option {
+        background: var(--dark-surface);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        position: relative;
+    }
+
+    .priority-option:hover {
+        border-color: var(--accent-primary);
+        background: var(--hover-bg);
+        transform: translateY(-2px);
+    }
+
+    .priority-option.selected {
+        border-color: var(--accent-primary);
+        background: var(--hover-bg);
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+    }
+
+    .priority-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .priority-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .priority-option.low .priority-icon { color: var(--accent-success); }
+    .priority-option.medium .priority-icon { color: var(--accent-warning); }
+    .priority-option.high .priority-icon { color: var(--accent-error); }
+
+    .priority-label {
+        font-weight: 600;
+        color: var(--text-primary) !important;
+        margin-bottom: 0.25rem;
+        font-size: 0.875rem;
+    }
+
+    .priority-desc {
+        color: var(--text-secondary) !important;
+        font-size: 0.75rem;
+    }
+
+    .character-count {
+        text-align: right;
+        font-size: 0.75rem;
+        color: var(--text-muted) !important;
+        margin-top: 0.5rem;
+    }
+
+    .checkbox-group {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 1rem;
+        background: var(--dark-surface);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .checkbox-group:hover {
+        border-color: var(--accent-primary);
+        background: var(--hover-bg);
+    }
+
+    .form-checkbox {
+        width: 18px;
+        height: 18px;
+        margin-top: 0.125rem;
+        accent-color: var(--accent-primary);
+    }
+
+    .checkbox-label {
+        flex: 1;
+        color: var(--text-secondary) !important;
+        font-size: 0.875rem;
+        line-height: 1.5;
+    }
+
+    .checkbox-label .link {
+        color: var(--accent-primary) !important;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .checkbox-label .link:hover {
+        text-decoration: underline;
+    }
+
+    .btn-submit {
+        background: var(--accent-gradient);
+        border: none;
+        color: white !important;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        width: 100%;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-submit::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+    }
+
+    .btn-submit:hover::before {
+        left: 100%;
+    }
+
+    .btn-submit:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .loading-spinner {
+        display: none;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .spinner {
+        border: 4px solid var(--border-color);
+        border-top: 4px solid var(--accent-primary);
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .success-container {
+        background: var(--dark-elevated);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 3rem 2rem;
+        text-align: center;
+        box-shadow: var(--shadow-lg);
+        display: none;
+    }
+
+    .success-icon {
+        width: 80px;
+        height: 80px;
+        background: var(--accent-success);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 2rem;
+        animation: successPulse 1s ease-out;
+    }
+
+    .success-icon i {
+        font-size: 2rem;
+        color: white;
+    }
+
+    @keyframes successPulse {
+        0% { transform: scale(0); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    .success-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--accent-success) !important;
+        margin-bottom: 1rem;
+    }
+
+    .success-message {
+        color: var(--text-secondary) !important;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+        font-size: 1rem;
+    }
+
+    .success-actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-secondary {
+        background: var(--dark-surface);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary) !important;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .btn-secondary:hover {
+        border-color: var(--accent-primary);
+        background: var(--hover-bg);
+        transform: translateY(-2px);
+        color: var(--text-primary) !important;
+        text-decoration: none;
+    }
+
+    .error-message {
+        color: var(--accent-error) !important;
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+        display: none;
+    }
+
+    .error-message.show {
+        display: block;
+    }
+
+    .form-control.error,
+    .form-select.error {
+        border-color: var(--accent-error);
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .complaint-container {
+            padding: 1rem 0;
+        }
+
+        .complaint-header {
+            padding: 1.5rem;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-card {
+            padding: 1.5rem;
+        }
+
+        .form-grid.two-col {
+            grid-template-columns: 1fr;
+        }
+
+        .priority-group {
+            grid-template-columns: 1fr;
+        }
+
+        .success-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .complaint-header {
+            padding: 1rem;
+        }
+
+        .form-card {
+            padding: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="complaint-container">
     <div class="container">
-        <h1>Vehicle Stolen Complaint Registration</h1>
-        <form id="complaint-form">
-            <div class="form-group">
-                <label for="vehicle_make">Vehicle Make:</label>
-                <input type="text" id="vehicle_make" name="vehicle_make" required>
+        <!-- Header -->
+        <div class="complaint-header">
+            <div class="header-content">
+                <h1 class="page-title">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    File Incident Report
+                </h1>
+                <p class="page-subtitle">Document violations, suspicious activities, or license-related incidents for investigation</p>
+                <div class="security-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Secure & Confidential</span>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="vehicle_model">Vehicle Model:</label>
-                <input type="text" id="vehicle_model" name="vehicle_model" required>
-            </div>
-            <div class="form-group">
-                <label for="license_plate">License Plate Number:</label>
-                <input type="text" id="license_plate" name="license_plate" required>
-            </div>
-            <div class="form-group">
-                <label for="complaint">Complaint Details:</label>
-                <textarea id="complaint" name="complaint" rows="4" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit <i class="bi bi-check"></i></button>
-        </form>
-        <div id="confirmation" class="hidden">
-            <p>Your vehicle stolen complaint has been registered. Thank you!</p>
         </div>
-        <!-- Dark/Light Mode Toggle Button -->
-        <button id="dark-mode-toggle" class="btn btn-secondary">Toggle Dark Mode <i class="bi bi-moon"></i></button>
+
+        <!-- Complaint Form -->
+        <div class="form-card">
+            <form id="complaintForm" method="POST" enctype="multipart/form-data">
+                <!-- Incident Type & Priority -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-list"></i>
+                        Incident Classification
+                    </h3>
+                    
+                    <div class="form-grid two-col">
+                        <div class="form-group">
+                            <label class="form-label required" for="incident_type">
+                                <i class="fas fa-tag"></i>Incident Type
+                            </label>
+                            <select class="form-select" id="incident_type" name="incident_type" required>
+                                <option value="">Select incident type</option>
+                                <option value="fake_license">Fake/Forged License</option>
+                                <option value="expired_license">Expired License</option>
+                                <option value="suspended_license">Suspended License</option>
+                                <option value="identity_theft">Identity Theft</option>
+                                <option value="document_fraud">Document Fraud</option>
+                                <option value="reckless_driving">Reckless Driving</option>
+                                <option value="traffic_violation">Traffic Violation</option>
+                                <option value="system_error">System Error</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div class="error-message" id="incident_type_error"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label required">
+                                <i class="fas fa-flag"></i>Priority Level
+                            </label>
+                            <div class="priority-group">
+                                <div class="priority-option low">
+                                    <input type="radio" id="priority_low" name="priority" value="low" required>
+                                    <div class="priority-icon"><i class="fas fa-info-circle"></i></div>
+                                    <div class="priority-label">Low</div>
+                                    <div class="priority-desc">Minor Issue</div>
+                                </div>
+                                <div class="priority-option medium">
+                                    <input type="radio" id="priority_medium" name="priority" value="medium" required>
+                                    <div class="priority-icon"><i class="fas fa-exclamation-circle"></i></div>
+                                    <div class="priority-label">Medium</div>
+                                    <div class="priority-desc">Moderate Concern</div>
+                                </div>
+                                <div class="priority-option high">
+                                    <input type="radio" id="priority_high" name="priority" value="high" required>
+                                    <div class="priority-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                    <div class="priority-label">High</div>
+                                    <div class="priority-desc">Urgent Investigation</div>
+                                </div>
+                            </div>
+                            <div class="error-message" id="priority_error"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location & Time Details -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Location & Time Details
+                    </h3>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="license_number">
+                                <i class="fas fa-id-card"></i>License Number
+                            </label>
+                            <input type="text" class="form-control" id="license_number" name="license_number" 
+                                   placeholder="Enter license number if known">
+                            <div class="error-message" id="license_number_error"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label required" for="incident_date">
+                                <i class="fas fa-calendar"></i>Incident Date
+                            </label>
+                            <input type="datetime-local" class="form-control" id="incident_date" name="incident_date" required>
+                            <div class="error-message" id="incident_date_error"></div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label class="form-label required" for="location">
+                                <i class="fas fa-map-marker-alt"></i>Incident Location
+                            </label>
+                            <input type="text" class="form-control" id="location" name="location" 
+                                   placeholder="Enter address or location details" required>
+                            <div class="error-message" id="location_error"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Incident Description -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-file-alt"></i>
+                        Incident Description
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label required" for="subject">
+                            <i class="fas fa-heading"></i>Subject/Title
+                        </label>
+                        <input type="text" class="form-control" id="subject" name="subject" 
+                               placeholder="Brief summary of the incident" required>
+                        <div class="error-message" id="subject_error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label required" for="description">
+                            <i class="fas fa-align-left"></i>Detailed Description
+                        </label>
+                        <textarea class="form-control" id="description" name="description" rows="6" 
+                                  placeholder="Provide detailed information about the incident, including any relevant circumstances, people involved, and actions taken..." required></textarea>
+                        <div class="character-count">
+                            <span id="char-count">0</span>/1000 characters
+                        </div>
+                        <div class="error-message" id="description_error"></div>
+                    </div>
+
+                    <!-- Evidence Upload -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-camera"></i>Evidence/Attachments
+                        </label>
+                        <div class="upload-section" onclick="document.getElementById('evidence').click()">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="upload-text">Upload Evidence Files</div>
+                            <div class="upload-hint">Photos, documents, or other evidence (Optional)</div>
+                            <div class="upload-hint" style="margin-top: 0.5rem;">Supported: JPG, PNG, PDF, DOC (Max 10MB per file)</div>
+                            <input type="file" id="evidence" name="evidence" multiple 
+                                   accept="image/*,.pdf,.doc,.docx" style="display: none;">
+                        </div>
+                        <div class="uploaded-files" id="uploadedFiles"></div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-user"></i>
+                        Reporter Information
+                    </h3>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label required" for="reporter_name">
+                                <i class="fas fa-user"></i>Reporter Name
+                            </label>
+                            <input type="text" class="form-control" id="reporter_name" name="reporter_name" 
+                                   value="{{ session.user_name or '' }}" required>
+                            <div class="error-message" id="reporter_name_error"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label required" for="reporter_contact">
+                                <i class="fas fa-phone"></i>Contact Information
+                            </label>
+                            <input type="text" class="form-control" id="reporter_contact" name="reporter_contact" 
+                                   placeholder="Phone number or email" required>
+                            <div class="error-message" id="reporter_contact_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input class="form-checkbox" type="checkbox" id="follow_up" name="follow_up" value="yes">
+                            <label class="checkbox-label" for="follow_up">
+                                Request follow-up on this complaint via email or phone
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input class="form-checkbox" type="checkbox" id="terms_agree" name="terms_agree" required>
+                            <label class="checkbox-label" for="terms_agree">
+                                I confirm that the information provided is accurate and agree to the 
+                                <a href="#" class="link">Terms of Service</a> and 
+                                <a href="#" class="link">Privacy Policy</a>
+                            </label>
+                        </div>
+                        <div class="error-message" id="terms_agree_error"></div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        <i class="fas fa-paper-plane me-2"></i>
+                        Submit Complaint
+                    </button>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner"></div>
+                    <h5 style="color: var(--text-primary);">Submitting your complaint...</h5>
+                    <p style="color: var(--text-muted);">Please wait while we process your report</p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Success Message -->
+        <div class="success-container" id="successContainer">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2 class="success-title">Complaint Submitted Successfully!</h2>
+            <div class="success-message">
+                <p>Your complaint has been registered and assigned tracking ID: <strong id="complaintId"></strong></p>
+                <p>Our investigation team will review your report and contact you within 24-48 hours if follow-up is required.</p>
+            </div>
+            <div class="success-actions">
+                <a href="{{ url_for('user_dashboard') }}" class="btn-secondary">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Back to Dashboard
+                </a>
+                <button class="btn-secondary" onclick="resetForm()">
+                    <i class="fas fa-plus"></i>
+                    Submit Another
+                </button>
+            </div>
+        </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-pzjw8f+ua6Kw1TIq0v8FqFjcJ6pajs/rfdfs3SO+k9w5w5F5K5F5I5F5I5j5E5I5F5k5F5P5n5U5K5O5k5p5f5k5F5U5K5O5K5v5E5N5K5U5n5O5I5O5K5I5P5k5P5g5f5k5I5Y5w5B5E5y5d5E5L5E5I5I5f5L5E5I5P5l5M5D5k5k5F5E5V5P5k5D5J5b5T5H5e5E5E5y5X5E5y5V5N5A5K5Y5M5O5G5T5b5P5b5P5b5b5B5p5H5b5g5C5C5C5F5B5X5D5T5X5E5E5J5F5y5Y5j5h5S5S5N5D5n5B5S5M5d5n5B5z5d5D5L5h5J5N5d5B5t5H5E5E5E5k5e5B5G5T5D5z5M5h5N5h5P5f5F5y5H5y5M5M5z5T5H5E5z5B5A5L5L5D5n5P5R5T5Z5w5C5O5M5D5N5D5l5G5G5G5i5A5A5A5A5A5A5A5A5A5A5A5A5A5A5A=" crossorigin="anonymous"></script>
-    <script src="complaint.js"></script>
-</body>
-</html>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    initializeForm();
+    setupEventListeners();
+});
+
+function initializeForm() {
+    // Set current date/time as default
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    document.getElementById('incident_date').value = now.toISOString().slice(0, 16);
+    
+    // Setup priority selection
+    setupPrioritySelection();
+    
+    // Setup file upload
+    setupFileUpload();
+    
+    // Setup character count
+    setupCharacterCount();
+}
+
+function setupEventListeners() {
+    const form = document.getElementById('complaintForm');
+    form.addEventListener('submit', handleFormSubmit);
+    
+    // Real-time validation
+    const inputs = document.querySelectorAll('.form-control, .form-select');
+    inputs.forEach(input => {
+        input.addEventListener('blur', () => validateField(input));
+        input.addEventListener('input', () => clearError(input));
+    });
+}
+
+function setupPrioritySelection() {
+    const priorityOptions = document.querySelectorAll('.priority-option');
+    priorityOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove selected class from all options
+            priorityOptions.forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            this.classList.add('selected');
+            
+            // Check the radio button
+            const radio = this.querySelector('input[type="radio"]');
+            radio.checked = true;
+            
+            // Clear any error
+            clearError(document.querySelector('input[name="priority"]'));
+        });
+    });
+}
+
+function setupFileUpload() {
+    const uploadSection = document.querySelector('.upload-section');
+    const fileInput = document.getElementById('evidence');
+    const uploadedFiles = document.getElementById('uploadedFiles');
+
+    // Handle file selection
+    fileInput.addEventListener('change', function() {
+        handleFiles(this.files);
+    });
+
+    // Drag and drop functionality
+    uploadSection.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.classList.add('dragover');
+    });
+
+    uploadSection.addEventListener('dragleave', function() {
+        this.classList.remove('dragover');
+    });
+
+    uploadSection.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.classList.remove('dragover');
+        handleFiles(e.dataTransfer.files);
+    });
+
+    function handleFiles(files) {
+        uploadedFiles.innerHTML = '';
+        Array.from(files).forEach((file, index) => {
+            if (file.size > 10 * 1024 * 1024) {
+                showToast(`File ${file.name} is too large. Maximum size is 10MB.`, 'error');
+                return;
+            }
+
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.innerHTML = `
+                <div class="file-info">
+                    <i class="fas fa-file"></i>
+                    <span>${file.name}</span>
+                    <small>(${formatFileSize(file.size)})</small>
+                </div>
+                <button type="button" class="file-remove" onclick="removeFile(this)">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            uploadedFiles.appendChild(fileItem);
+        });
+    }
+}
+
+function setupCharacterCount() {
+    const textarea = document.getElementById('description');
+    const charCount = document.getElementById('char-count');
+    
+    textarea.addEventListener('input', function() {
+        const count = this.value.length;
+        charCount.textContent = count;
+        
+        if (count > 1000) {
+            charCount.style.color = 'var(--accent-error)';
+            this.classList.add('error');
+        } else {
+            charCount.style.color = 'var(--text-muted)';
+            this.classList.remove('error');
+        }
+    });
+}
+
+function validateField(field) {
+    const value = field.value.trim();
+    let isValid = true;
+    let errorMessage = '';
+
+    // Required field validation
+    if (field.hasAttribute('required') && !value) {
+        errorMessage = 'This field is required.';
+        isValid = false;
+    }
+
+    // Priority validation
+    if (field.name === 'priority' && !document.querySelector('input[name="priority"]:checked')) {
+        errorMessage = 'Please select a priority level.';
+        isValid = false;
+    }
+
+    // Show/hide error
+    showFieldError(field, isValid, errorMessage);
+    return isValid;
+}
+
+function showFieldError(field, isValid, errorMessage) {
+    const errorElement = document.getElementById(`${field.name}_error`);
+    if (errorElement) {
+        if (isValid) {
+            errorElement.classList.remove('show');
+            field.classList.remove('error');
+        } else {
+            errorElement.textContent = errorMessage;
+            errorElement.classList.add('show');
+            field.classList.add('error');
+        }
+    }
+}
+
+function clearError(field) {
+    const errorElement = document.getElementById(`${field.name}_error`);
+    if (errorElement) {
+        errorElement.classList.remove('show');
+        field.classList.remove('error');
+    }
+}
+
+function handleFormSubmit(e) {
+    e.preventDefault();
+    
+    // Validate all required fields
+    let isValid = true;
+    const requiredFields = document.querySelectorAll('[required]');
+    requiredFields.forEach(field => {
+        if (!validateField(field)) {
+            isValid = false;
+        }
+    });
+
+    // Validate priority selection
+    if (!document.querySelector('input[name="priority"]:checked')) {
+        showFieldError(document.querySelector('input[name="priority"]'), false, 'Please select a priority level.');
+        isValid = false;
+    }
+
+    if (!isValid) {
+        showToast('Please correct the errors in the form.', 'error');
+        return;
+    }
+
+    // Show loading state
+    document.querySelector('.form-card').style.display = 'none';
+    document.getElementById('loadingSpinner').style.display = 'block';
+
+    // Simulate form submission
+    setTimeout(() => {
+        // Generate complaint ID
+        const complaintId = 'COMP-' + new Date().getFullYear() + '-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+        
+        // Show success message
+        document.getElementById('loadingSpinner').style.display = 'none';
+        document.getElementById('successContainer').style.display = 'block';
+        document.getElementById('complaintId').textContent = complaintId;
+        
+        // Scroll to success message
+        document.getElementById('successContainer').scrollIntoView({ behavior: 'smooth' });
+        
+        showToast('Complaint submitted successfully!', 'success');
+    }, 3000);
+}
+
+function resetForm() {
+    // Reset form and show it again
+    document.getElementById('complaintForm').reset();
+    document.getElementById('successContainer').style.display = 'none';
+    document.querySelector('.form-card').style.display = 'block';
+    document.getElementById('uploadedFiles').innerHTML = '';
+    
+    // Reset priority selection
+    document.querySelectorAll('.priority-option').forEach(option => {
+        option.classList.remove('selected');
+    });
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function removeFile(button) {
+    button.closest('.file-item').remove();
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function showToast(message, type = 'info') {
+    // Create and show toast notification
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        position: fixed; top: 2rem; right: 2rem; z-index: 9999;
+        background: ${type === 'success' ? 'var(--accent-success)' : type === 'error' ? 'var(--accent-error)' : 'var(--accent-info)'};
+        color: white; padding: 1rem 1.5rem; border-radius: 10px;
+        box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 0.5rem;
+        transform: translateX(100%); transition: transform 0.3s ease;
+    `;
+    toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'exclamation' : 'info'}-circle"></i>
+        <span>${message}</span>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => toast.style.transform = 'translateX(0)', 10);
+    setTimeout(() => {
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => document.body.removeChild(toast), 300);
+    }, 4000);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,899 @@
+{% extends "base.html" %}
+
+{% block title %}RTO Office Directory - DL Verification System{% endblock %}
+
+{% block extra_head %}
+<style>
+    :root {
+        --directory-gradient: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 50%, var(--accent-tertiary) 100%);
+        --office-card-bg: var(--dark-elevated);
+        --office-card-border: var(--border-color);
+        --search-bg: var(--dark-surface);
+    }
+
+    .directory-container {
+        padding: 2rem 0;
+        min-height: calc(100vh - 200px);
+    }
+
+    .directory-header {
+        background: linear-gradient(135deg, var(--dark-elevated) 0%, var(--dark-surface) 100%);
+        border-radius: 20px;
+        padding: 3rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .directory-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--directory-gradient);
+        border-radius: 20px 20px 0 0;
+    }
+
+    .directory-header h1 {
+        background: var(--directory-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+    }
+
+    .search-section {
+        background: var(--dark-elevated);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .search-controls {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .search-input, .search-select {
+        background: var(--search-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        color: var(--text-primary) !important;
+        padding: 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .search-input:focus, .search-select:focus {
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        outline: none;
+        background: var(--dark-card);
+    }
+
+    .btn-search {
+        background: var(--directory-gradient);
+        border: none;
+        color: white !important;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-search:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+        color: white !important;
+    }
+
+    .stats-overview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: var(--office-card-bg);
+        border: 1px solid var(--office-card-border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--directory-gradient);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--accent-primary);
+        box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--text-primary) !important;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: var(--text-secondary) !important;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .offices-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .office-card {
+        background: var(--office-card-bg);
+        border: 1px solid var(--office-card-border);
+        border-radius: 20px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .office-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--directory-gradient);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .office-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .office-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--accent-primary);
+        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+    }
+
+    .office-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+    }
+
+    .office-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-primary) !important;
+        margin-bottom: 0.5rem;
+    }
+
+    .office-code {
+        background: var(--directory-gradient);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .office-details {
+        margin-bottom: 1.5rem;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+        color: var(--text-secondary) !important;
+        font-weight: 500;
+    }
+
+    .detail-icon {
+        color: var(--accent-primary);
+        font-size: 1rem;
+        width: 16px;
+        text-align: center;
+    }
+
+    .office-services {
+        margin-bottom: 1.5rem;
+    }
+
+    .services-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+    }
+
+    .service-tag {
+        background: rgba(139, 92, 246, 0.1);
+        color: var(--accent-primary) !important;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .office-actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-office-action {
+        flex: 1;
+        min-width: 120px;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+        border: 2px solid var(--border-color);
+        background: var(--dark-surface);
+        color: var(--text-secondary) !important;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .btn-office-action:hover {
+        border-color: var(--accent-primary);
+        background: var(--hover-bg);
+        color: var(--accent-primary) !important;
+        transform: translateY(-2px);
+        text-decoration: none;
+    }
+
+    .btn-primary-action {
+        background: var(--directory-gradient) !important;
+        border-color: transparent !important;
+        color: white !important;
+    }
+
+    .btn-primary-action:hover {
+        color: white !important;
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    }
+
+    .distance-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--accent-success);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+    .timing-info {
+        background: var(--dark-surface);
+        border-radius: 10px;
+        padding: 1rem;
+        margin-top: 1rem;
+        border: 1px solid var(--border-color);
+    }
+
+    .timing-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .timing-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .timing-day {
+        color: var(--text-secondary) !important;
+        font-weight: 600;
+    }
+
+    .timing-hours {
+        color: var(--text-primary) !important;
+        font-weight: 500;
+    }
+
+    .status-open {
+        color: var(--accent-success) !important;
+        font-weight: 700;
+    }
+
+    .status-closed {
+        color: var(--accent-error) !important;
+        font-weight: 700;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: var(--text-muted) !important;
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        color: var(--accent-primary);
+        margin-bottom: 1rem;
+    }
+
+    .map-section {
+        background: var(--dark-elevated);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-top: 2rem;
+        text-align: center;
+    }
+
+    .map-placeholder {
+        background: var(--dark-surface);
+        border: 2px dashed var(--border-color);
+        border-radius: 12px;
+        padding: 3rem;
+        color: var(--text-muted) !important;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .directory-container {
+            padding: 1rem 0;
+        }
+
+        .directory-header {
+            padding: 2rem 1.5rem;
+        }
+
+        .directory-header h1 {
+            font-size: 2rem;
+        }
+
+        .search-controls {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-overview {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .offices-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .office-actions {
+            flex-direction: column;
+        }
+
+        .btn-office-action {
+            min-width: auto;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="directory-container">
+    <div class="container">
+        <!-- Header -->
+        <div class="directory-header">
+            <h1>
+                <i class="fas fa-building me-3"></i>
+                RTO Office Directory
+            </h1>
+            <p class="lead" style="color: var(--text-secondary) !important; font-size: 1.125rem; margin: 0;">
+                Find nearby RTO offices, their services, timings, and contact information
+            </p>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <h3 style="color: var(--text-primary) !important; margin-bottom: 1.5rem;">
+                <i class="fas fa-search me-2"></i>Find RTO Offices
+            </h3>
+            
+            <div class="search-controls">
+                <input type="text" class="search-input" id="locationSearch" placeholder="Enter city, state, or pincode...">
+                <select class="search-select" id="stateFilter">
+                    <option value="">All States</option>
+                    <option value="maharashtra">Maharashtra</option>
+                    <option value="delhi">Delhi</option>
+                    <option value="karnataka">Karnataka</option>
+                    <option value="tamil-nadu">Tamil Nadu</option>
+                    <option value="gujarat">Gujarat</option>
+                    <option value="rajasthan">Rajasthan</option>
+                    <option value="uttar-pradesh">Uttar Pradesh</option>
+                    <option value="west-bengal">West Bengal</option>
+                </select>
+                <select class="search-select" id="serviceFilter">
+                    <option value="">All Services</option>
+                    <option value="license-renewal">License Renewal</option>
+                    <option value="new-license">New License</option>
+                    <option value="duplicate-license">Duplicate License</option>
+                    <option value="vehicle-registration">Vehicle Registration</option>
+                    <option value="fitness-certificate">Fitness Certificate</option>
+                </select>
+                <button class="btn btn-search" onclick="searchOffices()">
+                    <i class="fas fa-search me-2"></i>Search Offices
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-overview">
+            <div class="stat-card">
+                <div class="stat-number" id="totalOffices">{{ total_offices or 156 }}</div>
+                <div class="stat-label">Total RTO Offices</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="nearbyOffices">{{ nearby_offices or 12 }}</div>
+                <div class="stat-label">Nearby Offices</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="openOffices">{{ open_offices or 89 }}</div>
+                <div class="stat-label">Currently Open</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgDistance">{{ avg_distance or '3.2' }} km</div>
+                <div class="stat-label">Average Distance</div>
+            </div>
+        </div>
+
+        <!-- Offices Grid -->
+        <div class="offices-grid" id="officesGrid">
+            <!-- Sample RTO Offices -->
+            <div class="office-card">
+                <div class="distance-badge">2.1 km</div>
+                <div class="office-header">
+                    <div>
+                        <div class="office-title">RTO Mumbai Central</div>
+                        <div class="office-code">MH-01</div>
+                    </div>
+                </div>
+                
+                <div class="office-details">
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt detail-icon"></i>
+                        <span>123 Central Road, Mumbai, Maharashtra - 400001</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-phone detail-icon"></i>
+                        <span>+91 22 2267 1234</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-envelope detail-icon"></i>
+                        <span>rto.mumbai@mh.gov.in</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock detail-icon"></i>
+                        <span class="status-open">Open Now • Closes at 6:00 PM</span>
+                    </div>
+                </div>
+
+                <div class="office-services">
+                    <strong style="color: var(--text-primary) !important;">Services Available:</strong>
+                    <div class="services-list">
+                        <span class="service-tag">New License</span>
+                        <span class="service-tag">Renewal</span>
+                        <span class="service-tag">Vehicle Registration</span>
+                        <span class="service-tag">Duplicate License</span>
+                    </div>
+                </div>
+
+                <div class="timing-info">
+                    <div class="timing-item">
+                        <span class="timing-day">Monday - Friday</span>
+                        <span class="timing-hours">10:00 AM - 6:00 PM</span>
+                    </div>
+                    <div class="timing-item">
+                        <span class="timing-day">Saturday</span>
+                        <span class="timing-hours">10:00 AM - 2:00 PM</span>
+                    </div>
+                    <div class="timing-item">
+                        <span class="timing-day">Sunday</span>
+                        <span class="timing-hours">Closed</span>
+                    </div>
+                </div>
+
+                <div class="office-actions">
+                    <a href="tel:+912222671234" class="btn-office-action">
+                        <i class="fas fa-phone me-1"></i>Call
+                    </a>
+                    <a href="#" class="btn-office-action">
+                        <i class="fas fa-directions me-1"></i>Directions
+                    </a>
+                    <a href="#" class="btn-office-action btn-primary-action">
+                        <i class="fas fa-calendar me-1"></i>Book Appointment
+                    </a>
+                </div>
+            </div>
+
+            <div class="office-card">
+                <div class="distance-badge">4.8 km</div>
+                <div class="office-header">
+                    <div>
+                        <div class="office-title">RTO Andheri West</div>
+                        <div class="office-code">MH-02</div>
+                    </div>
+                </div>
+                
+                <div class="office-details">
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt detail-icon"></i>
+                        <span>456 SV Road, Andheri West, Mumbai - 400058</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-phone detail-icon"></i>
+                        <span>+91 22 2634 5678</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-envelope detail-icon"></i>
+                        <span>rto.andheri@mh.gov.in</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock detail-icon"></i>
+                        <span class="status-closed">Closed • Opens tomorrow at 10:00 AM</span>
+                    </div>
+                </div>
+
+                <div class="office-services">
+                    <strong style="color: var(--text-primary) !important;">Services Available:</strong>
+                    <div class="services-list">
+                        <span class="service-tag">License Renewal</span>
+                        <span class="service-tag">Fitness Certificate</span>
+                        <span class="service-tag">NOC</span>
+                        <span class="service-tag">International Permit</span>
+                    </div>
+                </div>
+
+                <div class="timing-info">
+                    <div class="timing-item">
+                        <span class="timing-day">Monday - Friday</span>
+                        <span class="timing-hours">10:00 AM - 5:30 PM</span>
+                    </div>
+                    <div class="timing-item">
+                        <span class="timing-day">Saturday</span>
+                        <span class="timing-hours">10:00 AM - 1:00 PM</span>
+                    </div>
+                    <div class="timing-item">
+                        <span class="timing-day">Sunday</span>
+                        <span class="timing-hours">Closed</span>
+                    </div>
+                </div>
+
+                <div class="office-actions">
+                    <a href="tel:+912226345678" class="btn-office-action">
+                        <i class="fas fa-phone me-1"></i>Call
+                    </a>
+                    <a href="#" class="btn-office-action">
+                        <i class="fas fa-directions me-1"></i>Directions
+                    </a>
+                    <a href="#" class="btn-office-action btn-primary-action">
+                        <i class="fas fa-calendar me-1"></i>Book Appointment
+                    </a>
+                </div>
+            </div>
+
+            <div class="office-card">
+                <div class="distance-badge">7.3 km</div>
+                <div class="office-header">
+                    <div>
+                        <div class="office-title">RTO Bandra Kurla Complex</div>
+                        <div class="office-code">MH-03</div>
+                    </div>
+                </div>
+                
+                <div class="office-details">
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt detail-icon"></i>
+                        <span>BKC Complex, Bandra East, Mumbai - 400051</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-phone detail-icon"></i>
+                        <span>+91 22 2656 9012</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-envelope detail-icon"></i>
+                        <span>rto.bkc@mh.gov.in</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock detail-icon"></i>
+                        <span class="status-open">Open Now • Closes at 5:30 PM</span>
+                    </div>
+                </div>
+
+                <div class="office-services">
+                    <strong style="color: var(--text-primary) !important;">Services Available:</strong>
+                    <div class="services-list">
+                        <span class="service-tag">All Services</span>
+                        <span class="service-tag">Express Counter</span>
+                        <span class="service-tag">Digital Services</span>
+                    </div>
+                </div>
+
+                <div class="timing-info">
+                    <div class="timing-item">
+                        <span class="timing-day">Monday - Saturday</span>
+                        <span class="timing-hours">9:30 AM - 5:30 PM</span>
+                    </div>
+                    <div class="timing-item">
+                        <span class="timing-day">Sunday</span>
+                        <span class="timing-hours">Closed</span>
+                    </div>
+                </div>
+
+                <div class="office-actions">
+                    <a href="tel:+912226569012" class="btn-office-action">
+                        <i class="fas fa-phone me-1"></i>Call
+                    </a>
+                    <a href="#" class="btn-office-action">
+                        <i class="fas fa-directions me-1"></i>Directions
+                    </a>
+                    <a href="#" class="btn-office-action btn-primary-action">
+                        <i class="fas fa-calendar me-1"></i>Book Appointment
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="map-section">
+            <h3 style="color: var(--text-primary) !important; margin-bottom: 1.5rem;">
+                <i class="fas fa-map me-2"></i>Office Locations Map
+            </h3>
+            <div class="map-placeholder">
+                <i class="fas fa-map-marked-alt" style="font-size: 3rem; color: var(--accent-primary); margin-bottom: 1rem;"></i>
+                <h4 style="color: var(--text-primary) !important;">Interactive Map</h4>
+                <p>Map integration will show all RTO office locations with directions and real-time traffic information.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize office directory functionality
+    setupSearch();
+    loadNearbyOffices();
+});
+
+function setupSearch() {
+    const locationSearch = document.getElementById('locationSearch');
+    const stateFilter = document.getElementById('stateFilter');
+    const serviceFilter = document.getElementById('serviceFilter');
+
+    // Add event listeners for real-time search
+    locationSearch.addEventListener('input', debounce(searchOffices, 500));
+    stateFilter.addEventListener('change', searchOffices);
+    serviceFilter.addEventListener('change', searchOffices);
+}
+
+function searchOffices() {
+    const location = document.getElementById('locationSearch').value.toLowerCase();
+    const state = document.getElementById('stateFilter').value;
+    const service = document.getElementById('serviceFilter').value;
+    
+    console.log('Searching offices:', { location, state, service });
+    
+    // Show loading state
+    const officesGrid = document.getElementById('officesGrid');
+    showLoadingState(officesGrid);
+    
+    // Simulate API call
+    setTimeout(() => {
+        filterOffices({ location, state, service });
+    }, 1000);
+}
+
+function showLoadingState(container) {
+    container.innerHTML = `
+        <div class="col-12 text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3" style="color: var(--text-secondary) !important;">Searching offices...</p>
+        </div>
+    `;
+}
+
+function filterOffices(filters) {
+    // In a real application, this would make an API call
+    // For now, we'll simulate filtering the existing offices
+    
+    const officesGrid = document.getElementById('officesGrid');
+    const allOffices = document.querySelectorAll('.office-card');
+    
+    let visibleCount = 0;
+    
+    allOffices.forEach(office => {
+        let shouldShow = true;
+        
+        // Apply filters (simplified logic)
+        if (filters.location && filters.location.length > 2) {
+            const officeText = office.textContent.toLowerCase();
+            shouldShow = shouldShow && officeText.includes(filters.location);
+        }
+        
+        if (filters.state) {
+            // In real implementation, check office state
+            shouldShow = shouldShow && (filters.state === 'maharashtra'); // All sample offices are in Maharashtra
+        }
+        
+        if (filters.service) {
+            const services = office.querySelector('.services-list').textContent.toLowerCase();
+            shouldShow = shouldShow && services.includes(filters.service.replace('-', ' '));
+        }
+        
+        office.style.display = shouldShow ? 'block' : 'none';
+        if (shouldShow) visibleCount++;
+    });
+    
+    // Update stats
+    document.getElementById('nearbyOffices').textContent = visibleCount;
+    
+    // Show no results message if needed
+    if (visibleCount === 0) {
+        showNoResults(officesGrid);
+    }
+}
+
+function showNoResults(container) {
+    const noResultsHTML = `
+        <div class="empty-state col-12">
+            <i class="fas fa-search"></i>
+            <h4 style="color: var(--text-primary) !important;">No offices found</h4>
+            <p>Try adjusting your search criteria or location.</p>
+            <button class="btn btn-search" onclick="clearFilters()">
+                <i class="fas fa-refresh me-2"></i>Clear Filters
+            </button>
+        </div>
+    `;
+    
+    // Add to existing grid instead of replacing
+    container.insertAdjacentHTML('beforeend', noResultsHTML);
+}
+
+function clearFilters() {
+    document.getElementById('locationSearch').value = '';
+    document.getElementById('stateFilter').value = '';
+    document.getElementById('serviceFilter').value = '';
+    
+    // Show all offices
+    const allOffices = document.querySelectorAll('.office-card');
+    allOffices.forEach(office => {
+        office.style.display = 'block';
+    });
+    
+    // Remove no results message
+    const emptyState = document.querySelector('.empty-state');
+    if (emptyState) {
+        emptyState.remove();
+    }
+    
+    // Reset stats
+    document.getElementById('nearbyOffices').textContent = allOffices.length;
+}
+
+function loadNearbyOffices() {
+    // Simulate loading nearby offices based on user location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                console.log('User location:', position.coords.latitude, position.coords.longitude);
+                // In real implementation, use these coordinates to find nearby offices
+                updateDistances();
+            },
+            function(error) {
+                console.log('Location access denied:', error);
+                // Fallback to default location or show manual search
+            }
+        );
+    }
+}
+
+function updateDistances() {
+    // Simulate updating distances based on user location
+    const distanceBadges = document.querySelectorAll('.distance-badge');
+    distanceBadges.forEach((badge, index) => {
+        const distances = ['1.8 km', '3.2 km', '5.7 km', '8.1 km', '12.4 km'];
+        if (distances[index]) {
+            badge.textContent = distances[index];
+        }
+    });
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Office interaction functions
+function callOffice(phoneNumber) {
+    window.location.href = `tel:${phoneNumber}`;
+}
+
+function getDirections(address) {
+    const encodedAddress = encodeURIComponent(address);
+    window.open(`https://www.google.com/maps/search/${encodedAddress}`, '_blank');
+}
+
+function bookAppointment(officeId) {
+    // In real implementation, this would open an appointment booking system
+    alert('Appointment booking system will be integrated soon. Please call the office directly for now.');
+}
+
+// Real-time status updates
+function updateOfficeStatus() {
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+    
+    document.querySelectorAll('.office-card').forEach(card => {
+        const statusElement = card.querySelector('[class*="status-"]');
+        if (statusElement) {
+            // Simple logic: open between 10 AM and 6 PM
+            if (currentHour >= 10 && currentHour < 18) {
+                statusElement.className = 'status-open';
+                statusElement.textContent = 'Open Now • Closes at 6:00 PM';
+            } else {
+                statusElement.className = 'status-closed';
+                statusElement.textContent = 'Closed • Opens tomorrow at 10:00 AM';
+            }
+        }
+    });
+}
+
+// Update status every minute
+setInterval(updateOfficeStatus, 60000);
+updateOfficeStatus(); // Initial call
+</script>
+{% endblock %}

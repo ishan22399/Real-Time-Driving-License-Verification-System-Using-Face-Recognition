@@ -1,279 +1,1097 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>License Verification</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Afacad:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        body {
-    background-color: #f8f9fa;
-    font-family: 'Arial', sans-serif;
-}
+{% extends "base.html" %}
 
-.container {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+{% block title %}License Verification - Driving License Verification System{% endblock %}
 
-h1 {
-    text-align: center;
-    color: #2e363f;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 2.5em;
-}
-p {
-   font-family: 'Afacad';
-   line-height: 1.5;
-   font-size: 1.5em;
-}
-
-
-
-form {
-    margin-top: 20px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-label {
-    font-weight: bold;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-input[type="file"] {
-    display:block;
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    font-size: 14px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-}
-
-button {
-    display: inline-block;
-    margin-right: 10px;
-}
-
-#result {
-    font-weight: bold;
-    margin-top: 20px;
-}
-
-.text-success {
-    color: #28a745;
-}
-
-.text-danger {
-    color: #dc3545;
-}
-
-.navbar {
-  background-color: #f3f9ff;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  padding: 1rem 0;
-}
-
-.navbar-brand {
-  font-size: 2.25rem;
-  color: #333;
-  margin-left: 3%;
-}
-
-.navbar-toggler {
-  border-color: transparent;
-  outline: none;
-}
-
-.offcanvas {
-  background-color: #f3f9ff;
-}
-
-.offcanvas-header {
-  padding: 1rem;
-  border-bottom: 1px solid #ddd;
-}
-
-.offcanvas-title {
-  font-size: 1.25rem;
-  color: #333;
-}
-
-.offcanvas-body {
-  padding: 1rem;
-}
-
-.nav-link {
-  color: #333;
-  padding: 0.5rem 1rem;
-}
-
-.nav-link:active,
-.nav-link.active {
-  background-color: #ddd;
-  color: #333;
-}
-
-.dropdown-menu {
-  background-color: #fff;
-  border-radius: 0.25rem;
-  margin-top: 0;
-  padding: 0;
-}
-
-.dropdown-item {
-  color: #333;
-  padding: 0.5rem 1rem;
-}
-
-.dropdown-item:hover {
-  background-color: #eee;
-  color: #333;
-}
-
-
-
-    </style>
-</head>
-<body class="p-3 m-0 border-0 bd-example m-0 border-0">
-    <nav class="navbar bg-body-tertiary fixed-top">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">DLVS</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-header">
-              <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Dashboard</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Dropdown
-                  </a>
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li>
-                      <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                  </ul>
-                </li>
-              </ul>
-              <form class="d-flex mt-3" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </nav>
-    
-    <div class="container">
-        <h1>License Verification</h1>
-        <form id="verificationForm" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="driverImage">Upload Driver Image:</label>
-                <input type="file" class="form-control-file" id="driverImage" name="driverImage" accept="image/*" required>
-            </div>
-            <button type="button" class="btn btn-outline-primary" onclick="uploadImage()">Upload</button>
-            <button type="button" class="btn btn-outline-success" onclick="verify()">Verify</button>
-        </form>
-        <div id="result" class="mt-3"></div>
-        
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
-        function uploadImage() {
-            let formData = new FormData(document.getElementById('verificationForm'));
-
-            axios.post('/upload', formData)
-                .then(response => {
-                    console.log(response.data);
-                    alert('Image uploaded successfully!');
-                })
-                .catch(error => {
-                    console.error(error);
-                    alert('Error uploading image.');
-                });
-        }
-        
-        function verify() {
-    var formData = new FormData();
-    var fileInput = document.getElementById('driverImage');
-
-    if (!fileInput.files.length) {
-        console.error('No file provided');
-        displayResult({ success: false, message: 'No file provided' });
-        return;
+{% block extra_head %}
+<style>
+    :root {
+        --verification-gradient: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 50%, var(--accent-tertiary) 100%);
+        --upload-border: rgba(139, 92, 246, 0.3);
+        --upload-bg: rgba(139, 92, 246, 0.05);
+        --upload-hover: rgba(139, 92, 246, 0.1);
+        --success-gradient: linear-gradient(135deg, var(--accent-success), #34d399);
+        --error-gradient: linear-gradient(135deg, var(--accent-error), #f87171);
+        --warning-gradient: linear-gradient(135deg, var(--accent-warning), #fbbf24);
     }
 
-    formData.append('driverImage', fileInput.files[0]);
+    .verification-container {
+        padding: 2rem 0;
+        min-height: calc(100vh - 200px);
+    }
 
-    axios.post('/verify', formData)
-        .then(response => {
-            displayResult(response.data);
-        })
-        .catch(error => {
-            console.error(error);
-            displayResult({ success: false, message: 'Error during verification.' });
+    .verification-header {
+        background: linear-gradient(135deg, var(--dark-elevated) 0%, var(--dark-surface) 100%);
+        border-radius: 20px;
+        padding: 3rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .verification-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--verification-gradient);
+        border-radius: 20px 20px 0 0;
+    }
+
+    .verification-header h1 {
+        background: var(--verification-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+    }
+
+    .upload-section {
+        background: var(--dark-elevated);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .upload-section:hover {
+        border-color: var(--accent-primary);
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary) !important;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .section-title i {
+        color: var(--accent-primary);
+        font-size: 1.25rem;
+    }
+
+    .upload-zone {
+        border: 3px dashed var(--upload-border);
+        border-radius: 16px;
+        padding: 4rem 2rem;
+        text-align: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        background: var(--upload-bg);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .upload-zone::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .upload-zone:hover {
+        border-color: var(--accent-primary);
+        background: var(--upload-hover);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(139, 92, 246, 0.2);
+    }
+
+    .upload-zone:hover::before {
+        left: 100%;
+    }
+
+    .upload-zone.dragover {
+        border-color: var(--accent-secondary);
+        background: var(--upload-hover);
+        transform: scale(1.02);
+    }
+
+    .upload-icon {
+        font-size: 4rem;
+        color: var(--accent-primary);
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .upload-zone:hover .upload-icon {
+        transform: scale(1.1);
+        color: var(--accent-secondary);
+    }
+
+    .upload-content h4 {
+        color: var(--text-primary) !important;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .upload-content p {
+        color: var(--text-secondary) !important;
+        margin-bottom: 2rem;
+    }
+
+    .btn-upload {
+        background: var(--verification-gradient);
+        border: none;
+        color: white !important;
+        padding: 0.875rem 2rem;
+        border-radius: 12px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        margin: 0 0.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-upload::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn-upload:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+        color: white !important;
+    }
+
+    .btn-upload:hover::before {
+        left: 100%;
+    }
+
+    .btn-camera {
+        background: var(--dark-surface);
+        border: 2px solid var(--accent-tertiary);
+        color: var(--accent-tertiary) !important;
+        padding: 0.875rem 2rem;
+        border-radius: 12px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        margin: 0 0.5rem;
+    }
+
+    .btn-camera:hover {
+        background: var(--accent-tertiary);
+        color: white !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(6, 182, 212, 0.3);
+    }
+
+    .image-preview {
+        background: var(--dark-surface);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-top: 2rem;
+        border: 1px solid var(--border-color);
+        text-align: center;
+    }
+
+    .preview-img {
+        max-height: 300px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .preview-img:hover {
+        transform: scale(1.05);
+    }
+
+    .camera-stream {
+        background: var(--dark-surface);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-top: 2rem;
+        border: 1px solid var(--border-color);
+        text-align: center;
+    }
+
+    .camera-preview {
+        max-width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .progress-section {
+        background: var(--dark-elevated);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-top: 2rem;
+        display: none;
+    }
+
+    .progress-container {
+        position: relative;
+        background: var(--dark-surface);
+        border-radius: 10px;
+        overflow: hidden;
+        height: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: var(--verification-gradient);
+        border-radius: 10px;
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .progress-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    .progress-text {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--text-secondary) !important;
+        font-weight: 600;
+    }
+
+    .verification-result {
+        border-radius: 20px;
+        padding: 3rem;
+        margin-top: 2rem;
+        border: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .result-success {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.05));
+        border-color: var(--accent-success);
+    }
+
+    .result-success::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--success-gradient);
+    }
+
+    .result-error {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(248, 113, 113, 0.05));
+        border-color: var(--accent-error);
+    }
+
+    .result-error::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--error-gradient);
+    }
+
+    .result-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        animation: bounceIn 0.8s ease-out;
+    }
+
+    @keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .result-success .result-icon {
+        color: var(--accent-success);
+    }
+
+    .result-error .result-icon {
+        color: var(--accent-error);
+    }
+
+    .license-info {
+        background: var(--dark-surface);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-top: 2rem;
+        border: 1px solid var(--border-color);
+        position: relative;
+    }
+
+    .license-info::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 4px;
+        background: var(--success-gradient);
+        border-radius: 4px 0 0 4px;
+    }
+
+    .license-info h5 {
+        color: var(--text-primary) !important;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .license-info h5 i {
+        color: var(--accent-success);
+    }
+
+    .info-grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .info-item {
+        background: var(--dark-card);
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+    }
+
+    .info-item:hover {
+        border-color: var(--accent-primary);
+        background: var(--hover-bg);
+    }
+
+    .info-label {
+        font-weight: 700;
+        color: var(--text-secondary) !important;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .info-value {
+        color: var(--text-primary) !important;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .btn-verify {
+        background: var(--verification-gradient);
+        border: none;
+        color: white !important;
+        padding: 1rem 3rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.125rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        min-width: 200px;
+    }
+
+    .btn-verify:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+
+    .btn-verify:not(:disabled):hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(139, 92, 246, 0.4);
+        color: white !important;
+    }
+
+    .btn-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+    }
+
+    .btn-action {
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 2px solid var(--border-color);
+        background: var(--dark-surface);
+        color: var(--text-secondary) !important;
+    }
+
+    .btn-action:hover {
+        border-color: var(--accent-primary);
+        background: var(--hover-bg);
+        color: var(--accent-primary) !important;
+        transform: translateY(-2px);
+    }
+
+    .btn-remove {
+        background: var(--dark-surface);
+        border: 2px solid var(--accent-error);
+        color: var(--accent-error) !important;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+    .btn-remove:hover {
+        background: var(--accent-error);
+        color: white !important;
+    }
+
+    .tips-section {
+        background: var(--dark-elevated);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-top: 2rem;
+        position: relative;
+    }
+
+    .tips-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--warning-gradient);
+        border-radius: 20px 20px 0 0;
+    }
+
+    .tips-section h5 {
+        color: var(--text-primary) !important;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .tips-section h5 i {
+        color: var(--accent-warning);
+    }
+
+    .tips-list {
+        display: grid;
+        gap: 0.75rem;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .tip-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--text-secondary) !important;
+        font-weight: 500;
+    }
+
+    .tip-item i {
+        color: var(--accent-success);
+        font-size: 1.125rem;
+    }
+
+    .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid transparent;
+        border-top: 2px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-right: 0.5rem;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .verification-container {
+            padding: 1rem 0;
+        }
+
+        .verification-header {
+            padding: 2rem 1.5rem;
+        }
+
+        .verification-header h1 {
+            font-size: 2rem;
+        }
+
+        .upload-zone {
+            padding: 3rem 1.5rem;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+        }
+
+        .btn-upload,
+        .btn-camera {
+            margin: 0.25rem;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .btn-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tips-list {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="verification-container">
+    <div class="container">
+        <!-- Header -->
+        <div class="verification-header">
+            <h1>
+                <i class="fas fa-search me-3"></i>
+                License Verification
+            </h1>
+            <p class="lead" style="color: var(--text-secondary) !important; font-size: 1.125rem; margin: 0;">
+                Upload your photo to verify your driving license using advanced AI technology
+            </p>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <h3 class="section-title">
+                <i class="fas fa-cloud-upload-alt"></i>
+                Upload Driver Photo
+            </h3>
+
+            <form id="verificationForm" enctype="multipart/form-data">
+                <div class="upload-zone" id="uploadZone" onclick="document.getElementById('driverImage').click()">
+                    <input type="file" id="driverImage" name="driverImage" accept="image/*" style="display: none;" required>
+                    <div class="upload-content">
+                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                        <h4>Choose Photo or Drag & Drop</h4>
+                        <p>Supports JPG, PNG files up to 10MB</p>
+                        <div class="d-flex justify-content-center flex-wrap">
+                            <button type="button" class="btn btn-upload" onclick="document.getElementById('driverImage').click()">
+                                <i class="fas fa-folder-open me-2"></i>
+                                Browse Files
+                            </button>
+                            <button type="button" class="btn btn-camera" id="cameraBtn">
+                                <i class="fas fa-camera me-2"></i>
+                                Use Camera
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Image Preview -->
+                <div id="imagePreview" class="image-preview" style="display: none;">
+                    <img id="previewImg" class="preview-img img-fluid">
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-remove" id="removeImage">
+                            <i class="fas fa-trash me-2"></i>
+                            Remove Image
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Camera Stream -->
+                <div id="cameraStream" class="camera-stream" style="display: none;">
+                    <video id="video" autoplay class="camera-preview"></video>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-upload" id="captureBtn">
+                            <i class="fas fa-camera me-2"></i>
+                            Capture Photo
+                        </button>
+                        <button type="button" class="btn btn-action ms-2" id="stopCameraBtn">
+                            <i class="fas fa-times me-2"></i>
+                            Cancel
+                        </button>
+                    </div>
+                    <canvas id="canvas" style="display: none;"></canvas>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-verify" id="verifyBtn" disabled>
+                        <i class="fas fa-search me-2"></i>
+                        Verify License
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section" id="progressSection">
+            <h3 class="section-title">
+                <i class="fas fa-cog fa-spin"></i>
+                Processing Verification
+            </h3>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+            <div class="progress-text">
+                <span id="progressStatus">Initializing...</span>
+                <span id="progressPercent">0%</span>
+            </div>
+        </div>
+        
+        <!-- Results Section -->
+        <div id="resultSection" style="display: none;">
+            <div class="verification-result" id="verificationResult">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+        
+        <!-- Tips Section -->
+        <div class="tips-section">
+            <h5>
+                <i class="fas fa-lightbulb"></i>
+                Tips for Better Results
+            </h5>
+            <div class="tips-list">
+                <div class="tip-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Ensure good lighting conditions</span>
+                </div>
+                <div class="tip-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Face should be clearly visible</span>
+                </div>
+                <div class="tip-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Remove sunglasses or hats</span>
+                </div>
+                <div class="tip-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Use high-quality image</span>
+                </div>
+                <div class="tip-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Look directly at the camera</span>
+                </div>
+                <div class="tip-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Avoid blurry or dark images</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let stream = null;
+    
+    // File upload handling
+    document.getElementById('driverImage').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            handleFileUpload(file);
+        }
+    });
+    
+    // Drag and drop handling
+    const uploadZone = document.getElementById('uploadZone');
+    
+    uploadZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadZone.classList.add('dragover');
+    });
+    
+    uploadZone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+    });
+    
+    uploadZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type.startsWith('image/')) {
+                document.getElementById('driverImage').files = files;
+                handleFileUpload(file);
+            } else {
+                alert('Please upload an image file (JPG, PNG)');
+            }
+        }
+    });
+    
+    function handleFileUpload(file) {
+        if (file.size > 10 * 1024 * 1024) { // 10MB limit
+            alert('File size should be less than 10MB');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('previewImg').src = e.target.result;
+            document.getElementById('imagePreview').style.display = 'block';
+            document.getElementById('verifyBtn').disabled = false;
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    // Camera functionality
+    document.getElementById('cameraBtn').addEventListener('click', async function() {
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    width: { ideal: 1280 }, 
+                    height: { ideal: 720 },
+                    facingMode: 'user'
+                } 
+            });
+            document.getElementById('video').srcObject = stream;
+            document.getElementById('cameraStream').style.display = 'block';
+        } catch (err) {
+            console.error('Camera error:', err);
+            alert('Unable to access camera. Please check permissions or use file upload instead.');
+        }
+    });
+    
+    document.getElementById('captureBtn').addEventListener('click', function() {
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0);
+        
+        canvas.toBlob(function(blob) {
+            const file = new File([blob], 'captured-photo.jpg', { type: 'image/jpeg' });
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            document.getElementById('driverImage').files = dataTransfer.files;
+            
+            const previewUrl = URL.createObjectURL(blob);
+            document.getElementById('previewImg').src = previewUrl;
+            document.getElementById('imagePreview').style.display = 'block';
+            document.getElementById('verifyBtn').disabled = false;
+            
+            stopCamera();
         });
-}
-
-function displayResult(data) {
-  let resultDiv = document.getElementById('result');
-  resultDiv.innerHTML = '';
-
-  if (data.success) {
-    resultDiv.innerHTML = `
-      <div class="card border-success mb-3">
-        <div class="card-header bg-success text-white">Verification Successful!</div>
-        <div class="card-body text-dark">
-          <p><strong>Name:</strong> ${data.data.name}</p>
-          <p><strong>Date of Birth:</strong> ${data.data.dob}</p>
-          <p><strong>Class of Vehicle:</strong> ${data.data.cov}</p>
-          <p><strong>Driving License No:</strong> ${data.data.dl_number}</p>
-          <p><strong>Date of Issue:</strong> ${data.data.doi}</p>
-          <p><strong>Valid Till:</strong> ${data.data.vt}</p>
-        </div>
-      </div>
-    `;
-  } else {
-    resultDiv.innerHTML = `
-      <div class="card border-danger mb-3">
-        <div class="card-header bg-danger text-white">Verification Failed!</div>
-        <div class="card-body text-dark">
-          <p class="card-text">${data.message}</p>
-        </div>
-      </div>
-    `;
-    console.error('Verification failed. User not found. Best Match Flow:', data.best_match_flow);
-  }
-}
-
-
-    </script>
-</body>
-</html>
+    });
+    
+    document.getElementById('stopCameraBtn').addEventListener('click', stopCamera);
+    
+    function stopCamera() {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
+        }
+        document.getElementById('cameraStream').style.display = 'none';
+    }
+    
+    // Remove image
+    document.getElementById('removeImage').addEventListener('click', function() {
+        document.getElementById('imagePreview').style.display = 'none';
+        document.getElementById('driverImage').value = '';
+        document.getElementById('verifyBtn').disabled = true;
+        document.getElementById('resultSection').style.display = 'none';
+    });
+    
+    // Form submission
+    document.getElementById('verificationForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData();
+        const fileInput = document.getElementById('driverImage');
+        
+        if (!fileInput.files[0]) {
+            alert('Please select an image first.');
+            return;
+        }
+        
+        formData.append('driverImage', fileInput.files[0]);
+        
+        // Show progress
+        const progressSection = document.getElementById('progressSection');
+        const progressBar = document.getElementById('progressBar');
+        const progressPercent = document.getElementById('progressPercent');
+        const progressStatus = document.getElementById('progressStatus');
+        const verifyBtn = document.getElementById('verifyBtn');
+        
+        progressSection.style.display = 'block';
+        verifyBtn.disabled = true;
+        verifyBtn.innerHTML = '<div class="spinner"></div>Processing...';
+        
+        // Simulate realistic progress
+        let progress = 0;
+        const progressSteps = [
+            { progress: 15, status: 'Uploading image...' },
+            { progress: 35, status: 'Analyzing facial features...' },
+            { progress: 60, status: 'Searching database...' },
+            { progress: 85, status: 'Matching records...' },
+            { progress: 95, status: 'Finalizing results...' }
+        ];
+        
+        let stepIndex = 0;
+        const progressInterval = setInterval(() => {
+            if (stepIndex < progressSteps.length) {
+                const step = progressSteps[stepIndex];
+                progress = step.progress;
+                progressStatus.textContent = step.status;
+                progressBar.style.width = progress + '%';
+                progressPercent.textContent = progress + '%';
+                stepIndex++;
+            }
+        }, 800);
+        
+        try {
+            const response = await fetch('/verify', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            clearInterval(progressInterval);
+            
+            // Complete progress
+            progressBar.style.width = '100%';
+            progressPercent.textContent = '100%';
+            progressStatus.textContent = 'Complete!';
+            
+            setTimeout(() => {
+                progressSection.style.display = 'none';
+                showResult(result);
+                verifyBtn.disabled = false;
+                verifyBtn.innerHTML = '<i class="fas fa-search me-2"></i>Verify License';
+            }, 1000);
+            
+        } catch (error) {
+            clearInterval(progressInterval);
+            progressSection.style.display = 'none';
+            console.error('Verification error:', error);
+            showError('Verification failed. Please check your connection and try again.');
+            verifyBtn.disabled = false;
+            verifyBtn.innerHTML = '<i class="fas fa-search me-2"></i>Verify License';
+        }
+    });
+    
+    function showResult(result) {
+        const resultSection = document.getElementById('resultSection');
+        const verificationResult = document.getElementById('verificationResult');
+        
+        if (result.success) {
+            verificationResult.className = 'verification-result result-success';
+            verificationResult.innerHTML = `
+                <div class="text-center">
+                    <i class="fas fa-check-circle result-icon"></i>
+                    <h3 style="color: var(--text-primary) !important; font-weight: 700; margin-bottom: 1rem;">Verification Successful!</h3>
+                    <p style="color: var(--text-secondary) !important; margin-bottom: 0;">License information has been verified and matched successfully</p>
+                </div>
+                
+                <div class="license-info">
+                    <h5>
+                        <i class="fas fa-id-card"></i>
+                        License Information
+                    </h5>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Full Name</div>
+                            <div class="info-value">${result.data.name || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">License Number</div>
+                            <div class="info-value">${result.data.dl_number || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Date of Birth</div>
+                            <div class="info-value">${result.data.dob || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Issue Date</div>
+                            <div class="info-value">${result.data.doi || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Valid Till</div>
+                            <div class="info-value">${result.data.vt || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Vehicle Class</div>
+                            <div class="info-value">${Array.isArray(result.data.cov) ? result.data.cov.join(', ') : result.data.cov || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">State</div>
+                            <div class="info-value">${result.data.state || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Address</div>
+                            <div class="info-value">${result.data.address_line || 'N/A'}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="btn-actions">
+                    <button class="btn btn-action" onclick="window.print()">
+                        <i class="fas fa-print me-2"></i>
+                        Print Results
+                    </button>
+                    <button class="btn btn-action" onclick="downloadResults()">
+                        <i class="fas fa-download me-2"></i>
+                        Download PDF
+                    </button>
+                    <button class="btn btn-action" id="verifyAnotherBtn">
+                        <i class="fas fa-redo me-2"></i>
+                        Verify Another
+                    </button>
+                </div>
+            `;
+        } else {
+            verificationResult.className = 'verification-result result-error';
+            verificationResult.innerHTML = `
+                <div class="text-center">
+                    <i class="fas fa-times-circle result-icon"></i>
+                    <h3 style="color: var(--text-primary) !important; font-weight: 700; margin-bottom: 1rem;">Verification Failed</h3>
+                    <p style="color: var(--text-secondary) !important; margin-bottom: 2rem;">${result.message || 'License not found or verification failed'}</p>
+                    
+                    <div class="btn-actions">
+                        <button class="btn btn-action" id="tryAgainBtn">
+                            <i class="fas fa-redo me-2"></i>
+                            Try Again
+                        </button>
+                        <button class="btn btn-action" onclick="contactSupport()">
+                            <i class="fas fa-support me-2"></i>
+                            Contact Support
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('tryAgainBtn').addEventListener('click', function() {
+                resultSection.style.display = 'none';
+            });
+        }
+        
+        resultSection.style.display = 'block';
+        resultSection.scrollIntoView({ behavior: 'smooth' });
+        
+        // Add event listener for verify another button
+        const verifyAnotherBtn = document.getElementById('verifyAnotherBtn');
+        if (verifyAnotherBtn) {
+            verifyAnotherBtn.addEventListener('click', function() {
+                resetForm();
+            });
+        }
+    }
+    
+    function resetForm() {
+        document.getElementById('resultSection').style.display = 'none';
+        document.getElementById('imagePreview').style.display = 'none';
+        document.getElementById('driverImage').value = '';
+        document.getElementById('verifyBtn').disabled = true;
+        document.querySelector('.verification-container').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function showError(message) {
+        const resultSection = document.getElementById('resultSection');
+        const verificationResult = document.getElementById('verificationResult');
+        
+        verificationResult.className = 'verification-result result-error';
+        verificationResult.innerHTML = `
+            <div class="text-center">
+                <i class="fas fa-exclamation-triangle result-icon"></i>
+                <h3 style="color: var(--text-primary) !important; font-weight: 700; margin-bottom: 1rem;">Error</h3>
+                <p style="color: var(--text-secondary) !important; margin-bottom: 2rem;">${message}</p>
+                
+                <div class="btn-actions">
+                    <button class="btn btn-action" onclick="resetForm()">
+                        <i class="fas fa-redo me-2"></i>
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        resultSection.style.display = 'block';
+        resultSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function downloadResults() {
+        // Implement PDF download functionality
+        alert('PDF download feature will be implemented soon.');
+    }
+    
+    function contactSupport() {
+        // Implement support contact functionality
+        alert('Redirecting to support page...');
+    }
+    
+    // Clean up camera on page unload
+    window.addEventListener('beforeunload', function() {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+    });
+</script>
+{% endblock %}

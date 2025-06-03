@@ -1,634 +1,936 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
+{% block title %}Home - Driving License Verification System{% endblock %}
 
-    <title>Driving License Authentication</title>
+{% block extra_head %}
+<style>
+    :root {
+        --dark-bg: #0a0e13;
+        --dark-secondary: #161b22;
+        --dark-tertiary: #21262d;
+        --dark-quaternary: #30363d;
+        --dark-surface: #1c2128;
+        --accent-primary: #8b5cf6;
+        --accent-secondary: #a855f7;
+        --accent-tertiary: #c084fc;
+        --accent-gradient: linear-gradient(135deg, #8b5cf6, #a855f7, #c084fc);
+        /* Improved text colors for better visibility */
+        --text-primary: #ffffff;
+        --text-secondary: #c9d1d9;
+        --text-muted: #b1bac4;
+        --text-accent: #f0f6fc;
+        --text-highlight: #ffd700;
+        --glass-bg: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --success-color: #3fb950;
+        --warning-color: #f85149;
+        --shadow-dark: 0 25px 50px rgba(0, 0, 0, 0.5);
+        --shadow-glow: 0 0 50px rgba(139, 92, 246, 0.1);
+    }
+
+    body {
+        background: var(--dark-bg);
+        color: var(--text-primary);
+        overflow-x: hidden;
+        font-weight: 500;
+    }
+
+    /* Enhanced text visibility */
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--text-primary) !important;
+        font-weight: 700;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    p {
+        color: var(--text-secondary) !important;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+    small {
+        color: var(--text-muted) !important;
+        font-weight: 500;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: radial-gradient(ellipse at center, var(--dark-secondary) 0%, var(--dark-bg) 70%);
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .hero-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 25% 25%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
+            radial-gradient(circle at 75% 75%, rgba(168, 85, 247, 0.12) 0%, transparent 40%),
+            radial-gradient(circle at 50% 10%, rgba(192, 132, 252, 0.08) 0%, transparent 50%);
+        z-index: 1;
+    }
+
+    .hero-grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: 
+            linear-gradient(rgba(139, 92, 246, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: 1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 3;
+    }
+
+    .hero-title {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 900;
+        line-height: 1.1;
+        margin-bottom: 2rem;
+        letter-spacing: -0.02em;
+    }
+
+    .text-gradient {
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        background-size: 200% 200%;
+        animation: gradient-shift 4s ease-in-out infinite;
+    }
+
+    @keyframes gradient-shift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    .hero-subtitle {
+        font-size: 1.25rem;
+        line-height: 1.6;
+        color: var(--text-secondary) !important;
+        margin-bottom: 2.5rem;
+        max-width: 600px;
+        font-weight: 400;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Glass Cards */
+    .glass-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(25px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        padding: 2.5rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .glass-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--accent-gradient);
+        border-radius: 24px 24px 0 0;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-15px) scale(1.02);
+        box-shadow: var(--shadow-glow);
+        border-color: rgba(139, 92, 246, 0.3);
+    }
+
+    .hero-visual {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-ai-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(30px);
+        border: 1px solid var(--glass-border);
+        border-radius: 32px;
+        padding: 3rem;
+        text-align: center;
+        animation: float-gentle 8s ease-in-out infinite;
+        box-shadow: var(--shadow-dark);
+    }
+
+    @keyframes float-gentle {
+        0%, 100% { transform: translateY(0px) rotateY(0deg); }
+        50% { transform: translateY(-30px) rotateY(5deg); }
+    }
+
+    .ai-icon {
+        font-size: 5rem;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1.5rem;
+        display: block;
+        animation: pulse-ai 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-ai {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    /* Buttons */
+    .btn-primary-gradient {
+        background: var(--accent-gradient);
+        border: none;
+        border-radius: 16px;
+        padding: 1rem 2.5rem;
+        font-weight: 700;
+        color: white;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.95rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-primary-gradient::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn-primary-gradient:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+        color: white;
+    }
+
+    .btn-outline-gradient {
+        background: transparent !important;
+        border: 2px solid var(--accent-primary) !important;
+        border-radius: 16px !important;
+        padding: 1rem 2.5rem !important;
+        font-weight: 700 !important;
+        color: var(--accent-primary) !important;
+        text-decoration: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.75rem !important;
+        transition: all 0.3s ease !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        font-size: 0.95rem !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+
+    .btn-outline-gradient::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: var(--accent-gradient);
+        transition: left 0.5s ease;
+        z-index: -1;
+    }
+
+    .btn-outline-gradient:hover {
+        color: white !important;
+        border-color: var(--accent-primary) !important;
+        transform: translateY(-3px) !important;
+        box-shadow: 0 15px 30px rgba(139, 92, 246, 0.3) !important;
+        text-decoration: none !important;
+    }
+
+    .btn-outline-gradient:hover::before {
+        left: 0;
+    }
+
+    /* Feature Cards */
+    .feature-card {
+        background: var(--dark-secondary);
+        border: 1px solid var(--dark-tertiary);
+        border-radius: 20px;
+        padding: 2.5rem;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--accent-gradient);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--accent-primary);
+        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.15);
+        background: var(--dark-surface);
+    }
+
+    .feature-icon {
+        width: 100px;
+        height: 100px;
+        border-radius: 24px;
+        background: var(--accent-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 2rem;
+        font-size: 2.5rem;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .feature-card:hover .feature-icon {
+        transform: scale(1.1) rotateY(15deg);
+    }
+
+    /* Stats Section */
+    .stats-section {
+        background: var(--dark-secondary);
+        border-top: 1px solid var(--dark-tertiary);
+        border-bottom: 1px solid var(--dark-tertiary);
+        position: relative;
+    }
+
+    .stats-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 70%);
+    }
+
+    .stats-card {
+        background: var(--dark-tertiary);
+        border: 1px solid var(--dark-quaternary);
+        border-radius: 20px;
+        padding: 2.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stats-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(from 0deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+        animation: rotate 6s linear infinite;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .stats-card:hover::before {
+        opacity: 1;
+    }
+
+    @keyframes rotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .stats-number {
+        font-size: 3.5rem;
+        font-weight: 900;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+        display: block;
+        text-shadow: none;
+    }
+
+    .stats-card p {
+        color: var(--text-secondary) !important;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    /* Status Indicators */
+    .status-indicators {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .status-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+    }
+
+    .status-item small {
+        color: var(--text-primary) !important;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    /* Process Cards */
+    .process-card {
+        background: var(--dark-surface);
+        border: 1px solid var(--dark-tertiary);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .process-card h4 {
+        color: var(--text-primary) !important;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .process-card p {
+        color: var(--text-secondary) !important;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+    /* CTA Section */
+    .cta-section h2 {
+        color: var(--text-primary) !important;
+        font-weight: 800;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .cta-section p {
+        color: var(--text-secondary) !important;
+        font-weight: 400;
+        font-size: 1.125rem;
+    }
+
+    /* AI Card specific styling */
+    .hero-ai-card h3 {
+        color: var(--text-primary) !important;
+        font-weight: 700;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-ai-card p {
+        color: var(--text-secondary) !important;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+    /* Badge improvements for better visibility */
+    .badge {
+        font-weight: 600;
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        text-shadow: none;
+    }
+
+    .badge.bg-primary {
+        background: var(--accent-primary) !important;
+        color: white !important;
+    }
+
+    .badge.bg-success {
+        background: var(--success-color) !important;
+        color: white !important;
+    }
+
+    .badge.bg-info {
+        background: #17a2b8 !important;
+        color: white !important;
+    }
+
+    .badge.bg-warning {
+        background: #ffc107 !important;
+        color: #000 !important;
+        font-weight: 700;
+    }
+
+    /* Section headers improvements */
+    .display-5 {
+        color: var(--text-primary) !important;
+        font-weight: 800;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .lead {
+        color: var(--text-secondary) !important;
+        font-weight: 400;
+        font-size: 1.2rem;
+        line-height: 1.6;
+    }
+
+    /* Enhanced contrast for better readability */
+    @media (prefers-contrast: high) {
+        :root {
+            --text-primary: #ffffff;
+            --text-secondary: #e6edf3;
+            --text-muted: #c9d1d9;
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero-title { font-size: 2.5rem; }
+        .hero-section { min-height: 85vh; padding: 2rem 0; }
+        .glass-card, .hero-ai-card { padding: 2rem; }
+        .feature-icon { width: 80px; height: 80px; font-size: 2rem; }
+        .stats-number { font-size: 2.5rem; }
+        .status-indicators { justify-content: center; }
+    }
+
+    @media (max-width: 576px) {
+        .btn-primary-gradient, .btn-outline-gradient {
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-background"></div>
+    <div class="hero-grid"></div>
     
-    <meta charset="utf-8" />
-
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='animate.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='circle.css') }}">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet' type='text/css'>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-    <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='wow.min.js') }}"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <script>
-        new WOW().init();
-    </script>
-    
-		<script>
-
-			$(function() {
-  				$('a[href*=#]:not([href=#])').click(function() {
-    				if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
-      					var target = $(this.hash);
-      					target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
-      					if (target.length) {
-        					$('html,body').animate({
-          						scrollTop: target.offset().top
-        					}, 1000);
-        				return false;
-      					}
-    				}
-  				});
-			});
-		
-		</script>
-
-        <style>
-            .sticky {
-                position: fixed;
-                top: 0;
-                width: 100%;
-                }
-                .banner {
-	background-image: url("{{ url_for('static', filename='Image/17973908.jpg') }}");
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-	width: 100%;
-	height: 700px;
-	top: 75px;
-}
-
-        </style>
-</head>
-
-<body>
-
-    <header>
-
-        <nav class="navbar-default" style="border-radius:0;"  id="navbar">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#" style="font-family:Georgia, 'Times New Roman', Times, serif; font-size: 28px; color: #fff;">Driving License Authentication</a>
-                </div>
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#content2">ABOUT US</a>
-                        </li>
-                        <li><a href="#content6">SERVICES</a>
-                        </li>
-                        <li><a href="{{ url_for('login') }}">ADMIN LOGIN</a>
-    
-                        </li>
-                    </ul>
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6 order-2 order-lg-1">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        Advanced
+                        <span class="text-gradient">AI-Powered</span>
+                        License Verification
+                    </h1>
+                    <p class="hero-subtitle">
+                        Experience next-generation driving license verification with military-grade security, 
+                        lightning-fast AI processing, and 99.9% accuracy. Trusted by organizations worldwide.
+                    </p>
+                    
+                    <div class="d-flex flex-wrap gap-3 mb-4">
+                        {% if session.user_id %}
+                            {% if session.role == 'admin' %}
+                                <a href="{{ url_for('admin_dashboard') }}" class="btn-primary-gradient">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                    Admin Dashboard
+                                </a>
+                                <a href="{{ url_for('analytics') }}" class="btn-outline-gradient">
+                                    <i class="fas fa-chart-line"></i>
+                                    Analytics
+                                </a>
+                            {% else %}
+                                <a href="{{ url_for('verification') }}" class="btn-primary-gradient">
+                                    <i class="fas fa-search"></i>
+                                    Verify License
+                                </a>
+                                <a href="{{ url_for('user_dashboard') }}" class="btn-outline-gradient">
+                                    <i class="fas fa-user"></i>
+                                    Dashboard
+                                </a>
+                            {% endif %}
+                        {% else %}
+                            <a href="{{ url_for('verification') }}" class="btn-primary-gradient">
+                                <i class="fas fa-play"></i>
+                                Try Verification
+                            </a>
+                            <a href="{{ url_for('register_page') }}" class="btn-outline-gradient">
+                                <i class="fas fa-rocket"></i>
+                                Get Started
+                            </a>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="status-indicators">
+                        <div class="status-item">
+                            <div class="status-pulse"></div>
+                            <small>System Online</small>
+                        </div>
+                        <div class="status-item">
+                            <i class="fas fa-users" style="color: var(--accent-primary);"></i>
+                            <small>15,000+ verified today</small>
+                        </div>
+                        <div class="status-item">
+                            <i class="fas fa-shield-alt" style="color: var(--success-color);"></i>
+                            <small>100% Secure</small>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </nav>
-
-        <style>
-            .navbar-default {
-                background: transparent;
-            }
-            .navbar-default .navbar-nav>li>a {
-                color: #b8b4b4;
-                font-weight: 300;
-                font-family: 'Rubik', sans-serif;
-            }
-
-            .navbar-sticky {
-                background: rgb(57, 64, 71);
-            }
-            .navbar-sticky .navbar-nav>li>a {
-                color: #83bbeb;
-                font-weight: 300;
-                font-family: 'Rubik', sans-serif;
-            }
-
-            .navbar-toggle {
-    background-color: transparent;
-    border: none;
-    padding: 10px 15px; /* Adjust padding to your preference */
-    margin-right: 20px; /* Adjust margin to your preference */
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.navbar-toggle .icon-bar {
-    background-color: rgb(201, 219, 227); /* Adjust the color of the bars */
-    display: block;
-    width: 30px; /* Adjust the width of the bars */
-    height: 3px; /* Adjust the height of the bars */
-    margin: 6px auto; /* Center the bars vertically */
-    transition: background-color 0.3s ease;
-}
-
-.navbar-toggle:hover {
-    background-color: rgba(255, 255, 255, 0.321); /* Change the background color on hover */
-}
-
-.navbar-toggle:hover .icon-bar {
-    background-color: #553030; /* Change the color of the bars on hover */
-}
-
-
-
-
-        </style>
-
-    </header>
-
-    <div class="banner">
-        <div class="opacity_overlay">
-            <div class="info">
-                <h2>Welcome to Our Driving License Verification System </h2>
-                <br>
-                <h3>Government of India | Ministry of Road Transport & Highways</h3>
-                <br>
-                <a href="#content"><button type="button" id="proceed">Learn More</button></a>
+            
+            <div class="col-lg-6 order-1 order-lg-2 mb-5 mb-lg-0">
+                <div class="hero-visual">
+                    <div class="hero-ai-card">
+                        <i class="fas fa-brain ai-icon"></i>
+                        <h3 class="mb-3">Neural Network Recognition</h3>
+                        <p style="margin-bottom: 2rem;">
+                            Advanced deep learning algorithms with real-time processing capabilities
+                        </p>
+                        <div class="d-flex justify-content-center gap-2 flex-wrap">
+                            <span class="badge bg-primary">Real-time</span>
+                            <span class="badge bg-success">99.9% Accurate</span>
+                            <span class="badge bg-info">Secure</span>
+                            <span class="badge bg-warning">Fast</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</section>
 
-    <section id="content">
-        <div class="container">
-            <h2><u>Excellence in Service, Overflowing with Dedication</u></h2>
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="display-5 fw-bold mb-4">
+                    Why Choose Our <span class="text-gradient">Platform</span>?
+                </h2>
+                <p class="lead">
+                    Experience cutting-edge technology with enterprise-grade security and reliability
+                </p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h4 class="mb-3">Lightning Fast</h4>
+                    <p>
+                        Sub-second verification with optimized AI processing and edge computing
+                    </p>
+                </div>
+            </div>
             
-
-            <div class="boxes">
-                <div class="col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="wow flipInX"><i class="fa fa-fw fa-check"></i>Elevate Your Understanding</h4>
-                        </div>
-                        <div class="panel-body">
-                            <p>Welcome to the Cutting-Edge Face Recognition Driving License Verification System. Our state-of-the-art solution is designed exclusively for RTO officers to swiftly and accurately verify the authenticity of driver's licenses using advanced face recognition technology.</p>
-                            <br>
-                                <b>Join us in our mission to ensure road safety, promote compliance, and make our roads safer for everyone.</b>
-                        </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
                     </div>
+                    <h4 class="mb-3">Military-Grade Security</h4>
+                    <p>
+                        End-to-end encryption with zero data retention and GDPR compliance
+                    </p>
                 </div>
-                <div class="col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="wow flipInX"><i class="fa fa-fw fa-gift"></i>Unlocking the Power of Our System
-                            </h4>
-                        </div>
-                        <div class="panel-body">
-                            <p>
-                                <ul>
-                                    <b>
-                                        Efficient Verification:
-                                    </b>
-                                    Our system streamlines the verification process, enabling RTO officers to check a driver's license quickly and securely by simply scanning their face.
-                                </ul>
-                                <ul>
-                                    <b>
-                                        Database Integration:
-                                    </b>
-                                    Seamlessly integrated with RTO databases, our system cross-references the scanned data to determine the authenticity of the driver's license.
-                                </ul>
-                            </p>
-                        </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
                     </div>
+                    <h4 class="mb-3">AI-Powered</h4>
+                    <p>
+                        Advanced neural networks with continuous learning and improvement
+                    </p>
                 </div>
-                <div class="col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="wow flipInX"><i class="fa fa-fw fa-compass"></i>Our Commitment to Road Safety</h4>
-                        </div>
-                        <div class="panel-body">
-                            <p>We are dedicated to fostering road safety and compliance. By providing RTO officers with a robust tool for license verification, we aim to:
-                                <ul>
-                                    <b>
-                                        Reduce Unauthorized Driving:
-                                    </b>
-                                    Our system helps curb unauthorized or unqualified individuals from operating vehicles.
-                                </ul>
-                                <ul>
-                                    <b>
-                                        Ensure Compliance:
-                                    </b>
-                                    We support RTOs in enforcing strict compliance with traffic regulations and driving license documentation.
-                                </ul>
-                               
-                            </p>
-                            
-                        </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
                     </div>
+                    <h4 class="mb-3">Global Coverage</h4>
+                    <p>
+                        Support for international licenses with multi-language processing
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h4 class="mb-3">Mobile Ready</h4>
+                    <p>
+                        Native mobile apps with offline capabilities and camera integration
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4 class="mb-3">Analytics Dashboard</h4>
+                    <p>
+                        Real-time insights and comprehensive reporting for administrators
+                    </p>
                 </div>
             </div>
         </div>
-    </section>
-    
-   <!------ <section id="content2">
-    	<div class="opacity_overlay">
-    		<div class="container-fluid" style="padding: 0;">
-    			<div class="col-md-3 col-sm-6">
-    				<div class="feature-item text-center">
-    					<span class="glyphicon glyphicon-edit glyphicon-lg"></span>
-    					<h6>Easy To Edit</h6>
-    					<hr>
-    					<p>Lorem ipsum dolor sit amet, nemore salutatus ex eam, ei legimus comprehensam ius brute vivendum.</p>
-    				</div>
-    			</div>
-    			<div class="col-md-3 col-sm-6">
-    				<div class="feature-item text-center">
-    					<span class="glyphicon glyphicon-compressed glyphicon-lg"></span>
-    					<h6>Trendy Design</h6>
-    					<hr>
-    					<p>Lorem ipsum dolor sit amet, nemore salutatus ex eam, ei legimus comprehensam ius brute vivendum.</p>
-    				</div>
-    			</div>
-    			<div class="col-md-3 col-sm-6">
-    				<div class="feature-item text-center">
-    					<span class="glyphicon glyphicon-camera glyphicon-lg"></span>
-    					<h6>Photography</h6>
-    					<hr>
-    					<p>Lorem ipsum dolor sit amet, nemore salutatus ex eam, ei legimus comprehensam ius brute vivendum.</p>
-    				</div>
-    			</div>
-    			<div class="col-md-3 col-sm-6">
-    				<div class="feature-item text-center">
-    					<span class="glyphicon glyphicon-modal-window glyphicon-lg"></span>
-    					<h6>Beautifully Coded</h6>
-    					<hr>
-    					<p>Lorem ipsum dolor sit amet, nemore salutatus ex eam, ei legimus comprehensam ius brute vivendum.</p>
-    				</div>
-    			</div>
-    		</div>
-    	</div>
-    </section>
+    </div>
+</section>
 
-    <section id="content3">
-        <div class="information">
-            <div class="container">
-                <div class="row">
-                    <div class="title">
-           				<h2>Omittam Legendos Convenire</h2>
-                    </div>
-                    <br>
-                    <br>
-                    <div class="col-md-6">
-                        <div class="blockquote-box clearfix">
-                            <div class="square pull-left">
-                                <span class="glyphicon glyphicon-home glyphicon-lg"></span>
-                            </div>
-                            <h4>
-                    Home</h4>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.
-                            </p>
-                        </div>
-                        <div class="blockquote-box blockquote-primary clearfix">
-                            <div class="square pull-left">
-                                <span class="glyphicon glyphicon-envelope glyphicon-lg"></span>
-                            </div>
-                            <h4>
-                    Mail</h4>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.
-                            </p>
-                        </div>
-                        <div class="blockquote-box blockquote-success clearfix">
-                            <div class="square pull-left">
-                                <span class="glyphicon glyphicon-user glyphicon-lg"></span>
-                            </div>
-                            <h4>
-                    Users</h4>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="blockquote-box blockquote-info clearfix">
-                            <div class="square pull-left">
-                                <span class="glyphicon glyphicon-info-sign glyphicon-lg"></span>
-                            </div>
-                            <h4>
-                    Information</h4>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.
-                            </p>
-                        </div>
-                        <div class="blockquote-box blockquote-warning clearfix">
-                            <div class="square pull-left">
-                                <span class="glyphicon glyphicon-signal glyphicon-lg"></span>
-                            </div>
-                            <h4>
-                    Charts</h4>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.
-                            </p>
-                        </div>
-                        <div class="blockquote-box blockquote-danger clearfix">
-                            <div class="square pull-left">
-                                <span class="glyphicon glyphicon-globe glyphicon-lg"></span>
-                            </div>
-                            <h4>
-                   Global</h4>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.
-                            </p>
-                        </div>
-                    </div>
+<!-- Stats Section -->
+<section class="stats-section py-5 position-relative">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <span class="stats-number">100K+</span>
+                    <p class="mb-0">Licenses Verified</p>
                 </div>
             </div>
-    </section>
-    
-    <section id="content4">
-    	<div class="container">
-    		<h3>Lorem ipsum dolor sit amet</h3>
-    		<hr>
-    		<div class="product-info">
-    			<div class="col-md-4 col-sm-6">
-    				<div class="left-text pull-left">
-    					<h5>New Products</h5>
-    					<h4>Increase Profits</h4>
-    					<hr>
-    					<p>Vocibus persecuti incorrupte no qui, sed in euismod appareat democritum. Ea alienum apeirian eam, pro porro inermis ut.</p>
-    				</div>
-    			</div>
-    			<div class="col-md-4 col-sm-6">
-    				<div class="left-text pull-left">
-    					<h5>New Products</h5>
-    					<h4>Increase Reputation</h4>
-    					<hr>
-    					<p>Vocibus persecuti incorrupte no qui, sed in euismod appareat democritum. Ea alienum apeirian eam, pro porro inermis ut.</p>
-    				</div>
-    			</div>
-    			<div class="col-md-4 col-sm-6">
-    				<div class="left-text pull-left">
-    					<h5>New Products</h5>
-    					<h4>Increase Business</h4>
-    					<hr>
-    					<p>Vocibus persecuti incorrupte no qui, sed in euismod appareat democritum. Ea alienum apeirian eam, pro porro inermis ut.</p>
-    				</div>
-    			</div>
-    		</div>
-    	</div>
-    </section>
-    
-    <section id="content5">
-    	<div class="opacity_overlay">
-    		<div class="container">
-    			<h3>Our Skills</h3>
-    			<div class="col-md-4 col-sm-6">
-    				<div class="c100 p25">
-						<span>25%</span>
-						<div class="slice">
-							<div class="bar"></div>
-							<div class="fill"></div>
-						</div>
-					</div>
-					<h4>JQuery</h4>
-    			</div>
-    			<div class="col-md-4 col-sm-6">
-    				<div class="c100 p50 green">
-						<span>50%</span>
-						<div class="slice">
-							<div class="bar"></div>
-							<div class="fill"></div>
-						</div>
-					</div>
-					<h4>CSS</h4>
-    			</div>
-    			<div class="col-md-4 col-sm-6">
-    				<div class="c100 p75 orange">
-						<span>75%</span>
-						<div class="slice">
-							<div class="bar"></div>
-							<div class="fill"></div>
-						</div>
-					</div>
-					<h4>HTML</h4>
-    			</div>
-    		</div>
-    	</div>
-    </section>
-    
-    <section id="content6">
-    	<div class="container">
-            <h2>Aperiam convenire ocurreret</h2>
-            <h3>Lorem ipsum dolor sit amet, idque omnes ex eos putent gubergren in sea</h3>
-            
-			<div class="col-md-4 col-sm-6 col-xs-6">
-				<img src="images/gallery1.jpg" class="img-responsive">
-			</div>
-			<div class="col-md-4 col-sm-6 col-xs-6">
-				<img src="images/gallery2.jpg" class="img-responsive">
-			</div>
-			<div class="col-md-4 col-sm-6 col-xs-6">
-				<img src="images/gallery3.jpg" class="img-responsive">
-			</div>
-			<div class="col-md-4 col-sm-6 col-xs-6">
-				<img src="images/gallery4.jpg" class="img-responsive">
-			</div>
-			<div class="col-md-4 col-sm-6 col-xs-6">
-				<img src="images/gallery5.jpg" class="img-responsive">
-			</div>
-			<div class="col-md-4 col-sm-6 col-xs-6">
-				<img src="images/gallery6.jpg" class="img-responsive">
-			</div>
-    	</div>
-    </section>
-    
-    
-    <section id="content7">
-    	<div class="conatiner-fluid" style="padding: 0;">
-    		<h2>Are you ready for the ultimate upgrade?</h2>
-    	</div>
-    </section>
-    
-    <section id="content8">
-        <div id="pricing-table">
-            <div class="container">
-                <div class="row">
-                    <div class="pricing">
-                        <div class="col-md-4 col-sm-6 col-xs-12">
-                            <div class="pricing-table">
-                                <div class="pricing-header">
-                                    <p class="pricing-title">Free Plan</p>
-                                    <p class="pricing-rate"><sup>$</sup> 0 <span>/Mo.</span></p>
-                                    <a href="#" class="btn btn-custom">And Get Free Month</a>
-                                </div>
-
-                                <div class="pricing-list">
-                                    <ul>
-                                        <li><i class="fa fa-envelope"></i>1,000 messages</li>
-                                        <li><i class="fa fa-signal"></i><span>limited</span> data</li>
-                                        <li><i class="fa fa-user"></i><span>limited</span> users</li>
-                                        <li><i class="fa fa-smile-o"></i>first 10 day free</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 col-sm-6 col-xs-12">
-                            <div class="pricing-table">
-                                <div class="pricing-header">
-                                    <p class="pricing-title">Business Plan</p>
-                                    <p class="pricing-rate"><sup>$</sup> 20 <span>/Mo.</span></p>
-                                    <a href="#" class="btn btn-custom">And Get Free Month</a>
-                                </div>
-
-                                <div class="pricing-list">
-                                    <ul>
-                                        <li><i class="fa fa-envelope"></i>10,000 messages</li>
-                                        <li><i class="fa fa-signal"></i><span>unlimited</span> data</li>
-                                        <li><i class="fa fa-user"></i><span>unlimited</span> users</li>
-                                        <li><i class="fa fa-smile-o"></i>first 10 day free</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 col-sm-6 col-xs-12">
-                            <div class="pricing-table">
-                                <div class="pricing-header">
-                                    <p class="pricing-title">Extended Plan</p>
-                                    <p class="pricing-rate"><sup>$</sup> 80 <span>/Mo.</span></p>
-                                    <a href="#" class="btn btn-custom">And Get Free Month</a>
-                                </div>
-
-                                <div class="pricing-list">
-                                    <ul>
-                                        <li><i class="fa fa-envelope"></i>10,0000 messages</li>
-                                        <li><i class="fa fa-signal"></i><span>unlimited</span> data</li>
-                                        <li><i class="fa fa-user"></i><span>unlimited</span> users</li>
-                                        <li><i class="fa fa-smile-o"></i>first 10 day free</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <span class="stats-number">99.9%</span>
+                    <p class="mb-0">Accuracy Rate</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <span class="stats-number">0.8s</span>
+                    <p class="mb-0">Avg Processing</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stats-card">
+                    <span class="stats-number">24/7</span>
+                    <p class="mb-0">System Uptime</p>
                 </div>
             </div>
         </div>
-    </section>
-    --->
+    </div>
+</section>
 
+<!-- How It Works -->
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="display-5 fw-bold mb-4">
+                    How It <span class="text-gradient">Works</span>
+                </h2>
+                <p class="lead">
+                    Three simple steps to secure, instant license verification
+                </p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="process-card" data-step="1">
+                    <div class="feature-icon mx-auto mb-4">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h4 class="mb-3">Capture & Upload</h4>
+                    <p>
+                        Upload license image or capture live photo with guided assistance
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="process-card" data-step="2">
+                    <div class="feature-icon mx-auto mb-4">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h4 class="mb-3">AI Processing</h4>
+                    <p>
+                        Advanced algorithms analyze and verify facial features instantly
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="process-card" data-step="3">
+                    <div class="feature-icon mx-auto mb-4">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h4 class="mb-3">Get Results</h4>
+                    <p>
+                        Receive comprehensive verification report with confidence score
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+{% if not session.user_id %}
+<section class="cta-section py-5 position-relative">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center position-relative">
+                <h2 class="display-5 fw-bold mb-4">Ready to Transform Your Verification Process?</h2>
+                <p class="lead mb-5">
+                    Join thousands of organizations using our platform for secure, instant license verification
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="{{ url_for('register_page') }}" class="btn-primary-gradient">
+                        <i class="fas fa-rocket"></i>
+                        Start Free Trial
+                    </a>
+                    <a href="{{ url_for('verification') }}" class="btn-outline-gradient">
+                        <i class="fas fa-play"></i>
+                        Live Demo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Enhanced scroll animations with intersection observer
+const createObserver = (threshold = 0.1) => {
+    return new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.transform = 'translateY(0)';
+                entry.target.style.opacity = '1';
+                entry.target.classList.add('animate-in');
+            }
+        });
+    }, { threshold, rootMargin: '0px 0px -50px 0px' });
+};
+
+// Initialize animations for different elements
+document.addEventListener('DOMContentLoaded', function() {
+    const observer = createObserver();
     
-	<!-----<section id="content9">
-    	<div id="carousel">
-        	<div class="container">
-            	<div class="row">
-                	<div class="col-md-8 col-md-offset-2">
-                    	<div class="quote"><i class="fa fa-quote-left fa-4x"></i>
-                    	</div>
-                    	<div class="carousel slide" id="fade-quote-carousel" data-ride="carousel" data-interval="4000">
-                        	
-                        	<ol class="carousel-indicators">
-                            	<li data-target="#fade-quote-carousel" data-slide-to="0" class="active"></li>
-                            	<li data-target="#fade-quote-carousel" data-slide-to="1"></li>
-                            	<li data-target="#fade-quote-carousel" data-slide-to="2"></li>
-                        	</ol>
-                        
-                        	<div class="carousel-inner">
-                            	<div class="active item">
-                                	<blockquote>
-                                    	<p>Road safety is not merely a duty; it's a shared responsibility that impacts us all. It's about safeguarding lives, protecting loved ones, and ensuring that each journey ends safely. Awareness plays a pivotal role in this endeavor. By staying informed about traffic rules, practicing safe driving habits, and respecting the road, we empower ourselves to make a difference. When every individual makes road safety a priority, we collectively create a safer, more harmonious environment for everyone.</p>
-                                	</blockquote>
-                                	<div class="profile-circle" style="width: 400px; /* Change this to your desired width */
-                                    height: 400px; /* Change this to your desired height */
-                                    background-image: url('images/cheif\ of\ rto.jpg');
-                                    background-size: cover; /* To cover the entire circle */
-                                    border-radius: 50%;"></div>
-                            	</div>
-                            	<div class="item">
-                                	<blockquote>
-                                    	<p>Cooperation with our dedicated traffic officers is key to a safer road experience. These unsung heroes work tirelessly to enforce rules and maintain order on our chaotic streets. Their commitment to our well-being is unwavering, and we must reciprocate this dedication by following their guidance, cooperating during inspections, and respecting their authority. Together, as responsible citizens, we can ease their burden and contribute to a more efficient and secure traffic environment.</p>
-                                	</blockquote>
-                                	<div class="profile-circle" style="width: 400px; /* Change this to your desired width */
-                                    height: 400px; /* Change this to your desired height */
-                                    background-image: url('images/mXt8WGNX_400x400.jpg');
-                                    background-size: cover; /* To cover the entire circle */
-                                    border-radius: 50%;"></div>
-                            	</div>
-                            	<div class="item">
-                                	<blockquote>
-                                    	<p>Let road safety be our shared pledge. By fostering a culture of responsibility, awareness, and cooperation, we can turn the tide on road accidents and tragedies. Each day we step onto the road, let's remember that our actions impact not only our lives but the lives of countless others. It's time to unite in our efforts, champion road safety, and show our gratitude to the officers who tirelessly serve our communities. Together, we can ensure that every journey is a journey safely completed.</p>
-                                	</blockquote>
-                                	<div class="profile-circle" style="width: 400px; /* Change this to your desired width */
-                                    height: 400px; /* Change this to your desired height */
-                                    background-image: url('images/MhDYzICY_400x400.jpg');
-                                    background-size: cover; /* To cover the entire circle */
-                                    border-radius: 50%;"></div>
-                            	</div>
-                        	</div>
-                    	</div>
-                	</div>
-            	</div>
-        	</div>
-    	</div>
-	</section>---->
-	
-	<footer id="footer">
-		<div class="container">
-			<div class="col-md-4 col-sm-6">
-				<h3>About Us</h3>
-				<hr>
-				<p>Lorem ipsum dolor sit amet, qui facilis epicuri at. Vis quando timeam ex, alia natum ut vix. At alii eros commune ius, discere nominati usu in, te vis dictas dolorum facilisi. Ei his semper laoreet suscipiantur.</p>
-			</div>
-			<div class="col-md-4 col-sm-6">
-				<h3>Contact Info</h3>
-				<hr>
-				<ul class="contact-list">
-					<li>
-						<p>
-							<i class="fa fa-home"></i>
-							Vishwakarma Institute of TEchnology Pune
-						</p>
-						<p>
-							<i class="fa fa-phone"></i>
-							0987 654 3210 
-						</p>
-						<p>
-							<i class="fa fa-envelope-o"></i>
-							vit@vit.edu
-						</p>
-					</li>
-				</ul>
-			</div>
-			<div class="col-md-4 col-sm-6">
-				<h3>Newsletter</h3>
-				<hr>
-				<p>Subscribe to our newsletter to get the latest updates</p>
-				<input type="email" placeholder="Email address..." required>
-			</div>
-		</div>
-	</footer>
-	
-	<div id="copyright-part">
-		<p>&copy 2023 <span>Driving License Verification System</span></p>
-	</div>
+    // Animate cards
+    document.querySelectorAll('.feature-card, .stats-card, .process-card').forEach((el, index) => {
+        el.style.transform = 'translateY(60px)';
+        el.style.opacity = '0';
+        el.style.transition = `all 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s`;
+        observer.observe(el);
+    });
+    
+    // Counter animation for stats
+    const animateCounter = (element, target) => {
+        let current = 0;
+        const increment = target / 100;
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            
+            if (target > 1000) {
+                element.textContent = Math.floor(current / 1000) + 'K+';
+            } else if (target > 90) {
+                element.textContent = current.toFixed(1) + '%';
+            } else {
+                element.textContent = current.toFixed(1) + 's';
+            }
+        }, 20);
+    };
+    
+    // Observe stats for counter animation
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const number = entry.target.querySelector('.stats-number');
+                const text = number.textContent;
+                
+                if (text.includes('K+')) {
+                    animateCounter(number, 100);
+                } else if (text.includes('%')) {
+                    animateCounter(number, 99.9);
+                } else if (text.includes('s')) {
+                    animateCounter(number, 0.8);
+                } else {
+                    number.textContent = text;
+                }
+                
+                statsObserver.unobserve(entry.target);
+            }
+        });
+    });
+    
+    document.querySelectorAll('.stats-card').forEach(card => {
+        statsObserver.observe(card);
+    });
+});
 
+// Enhanced hover effects
+document.querySelectorAll('.feature-card, .process-card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-15px) scale(1.02)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1)';
+    });
+});
 
-    <script>
-        window.onscroll = function() {myFunction()};
-        
-        var navbar = document.getElementById("navbar");
-        var sticky = navbar.offsetTop;
-        
-        function myFunction() {
-          if (window.pageYOffset >= sticky) {
-            navbar.classList.add("sticky")
-            navbar.classList.add("navbar-sticky")
-            navbar.classList.remove("navbar-default")
-          } else {
-            navbar.classList.remove("sticky")
-          }
-        }
-        </script>
-</body>
-
-</html>
+// Parallax effect for hero background
+window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    const rate = scrolled * -0.3;
+    
+    const heroBackground = document.querySelector('.hero-background');
+    if (heroBackground) {
+        heroBackground.style.transform = `translateY(${rate}px)`;
+    }
+});
+</script>
+{% endblock %}
