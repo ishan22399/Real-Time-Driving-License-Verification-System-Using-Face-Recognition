@@ -33,9 +33,9 @@ os.makedirs('uploads/driver_images', exist_ok=True)
 os.makedirs('uploads/license_images', exist_ok=True)
 os.makedirs('uploads/holder_images', exist_ok=True)
 
-cred = credentials.Certificate("license-verification-ab3ef-firebase-adminsdk-3h1lk-9923b5ceaa.json") # Firebase Admin SDK JSON File
+cred = credentials.Certificate("/path-to-firebase-json-file") # Firebase Admin SDK JSON File
 firebase_admin.initialize_app(cred, {
-    'databaseURL': os.getenv('FIREBASE_DATABASE_URL', 'https://license-verification-ab3ef-default-rtdb.firebaseio.com/') # Firebase Database URL
+    'databaseURL': os.getenv('FIREBASE_DATABASE_URL', '#firebase-database-url') # Firebase Database URL
 })
 firebase_db = db.reference()
 
@@ -76,7 +76,7 @@ def average_filter(values):
         return 0
 
 # MongoDB Configuration - Direct URL (no environment variables)
-app.config['MONGO_URI'] = 'mongodb+srv://ishan:ishan22399@website.8lfhad0.mongodb.net/?retryWrites=true&w=majority&appName=website'
+app.config['MONGO_URI'] = '#mongodburl'
 
 # Initialize MongoDB connection with better error handling
 client = None
