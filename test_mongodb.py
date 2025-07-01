@@ -25,10 +25,9 @@ def test_mongodb_connection():
             print()
             
         # Construct MongoDB URI
-        mongo_uri = f'mongodb+srv://username:password@website.8lfhad0.mongodb.net/?retryWrites=true&w=majority&appName=website'
+        mongo_uri = f'__mongodburl__'
         
         print("🔄 Testing MongoDB connection...")
-        print(f"📍 Connecting to: mongodb+srv://ishan:***@website.8lfhad0.mongodb.net/...")
         
         # Create client and test connection
         client = MongoClient(mongo_uri)
